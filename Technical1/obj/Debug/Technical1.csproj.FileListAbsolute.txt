@@ -1,0 +1,7 @@
+C:\Users\rouni\Desktop\CODE\Technical1\Technical1\bin\Debug\Technical1.exe.config
+C:\Users\rouni\Desktop\CODE\Technical1\Technical1\bin\Debug\Technical1.exe
+C:\Users\rouni\Desktop\CODE\Technical1\Technical1\bin\Debug\Technical1.pdb
+C:\Users\rouni\Desktop\CODE\Technical1\Technical1\obj\Debug\Technical1.csprojAssemblyReference.cache
+C:\Users\rouni\Desktop\CODE\Technical1\Technical1\obj\Debug\Technical1.csproj.CoreCompileInputs.cache
+C:\Users\rouni\Desktop\CODE\Technical1\Technical1\obj\Debug\Technical1.exe
+C:\Users\rouni\Desktop\CODE\Technical1\Technical1\obj\Debug\Technical1.pdb
