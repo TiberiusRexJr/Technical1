@@ -12,18 +12,23 @@ namespace Technical1.Model
 
 
         #region Properties
-        public string InvoiceNo { get; set; }
-        public string AccountNo { get; set; }
-        public string CustomerName { get; set; }
-        public string CycleCd { get; set; }
-        public DateTime BillDate { get; set; }
-        public DateTime DueDate { get; set; }
-        public string AccountClass { get; set; }
-        public Bill BillInfo { get; set; }
-        public AddressInformation AddressInfo { get; set; }
+        public string Invoice_No { get; set; }
+        public string Account_No { get; set; }
+        public string Customer_Name { get; set; }
+        public string Cycle_Cd { get; set; }
+        public DateTime Bill_Dt { get; set; }
+        public DateTime Due_Dt { get; set; }
+        public string Account_Class { get; set; }
+        public Bill Class_BillInfo { get; set; }
+        public AddressInformation Class_AddressInformation { get; set; }
         public string InvoiceFormat{get;set;}
+        public string SERVICE_ADDRESS { get; set; }
 
+        #endregion
 
+        #region Xmlproperties
+        public readonly string NodeName = "BILL_HEADER";
+        public readonly string ParentNodeName = "BILL_HEADER_Dataset";
         #endregion
 
         #region Constructor

@@ -8,10 +8,15 @@ namespace Technical1.Model
 {
     class AddressInformation
     {
-        public string MailingAddress_1 { get; set; }
-        public string MailingAddress_2 { get; set; }
+        public string Mailing_Address_1 { get; set; }
+        public string Mailing_Address_2 { get; set; }
         public string City { get; set; }
         public string State { get; set; }
         public int Zip { get; set; }
+
+        #region Xmlproperties
+        public readonly string NodeName = "Address_Information";
+        public readonly string ParentNodeName = "BILL_HEADER";
+        #endregion
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Xml;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,10 +29,19 @@ namespace FileOps.IO
         #endregion
 
         #region ReadFile
-        public void ReadXML()
+        public XmlNodeList GetXMLData(string filePath,string nodeName)
         {
+            XmlDocument xml = new XmlDocument();
+            XmlNodeList Bill_Headers = default;
 
+            FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
 
+            xml.Load(fs);
+
+            Bill_Headers= xml.GetElementsByTagName(nodeName);
+
+            return Bill_Headers; 
+            
         }
         public void ReadRPT()
         {
@@ -73,13 +84,13 @@ namespace FileOps.IO
         {
             
             string line = string.Empty;
-            line += header.AccountNo+"|";
-            line += header.CustomerName + "|";
-            line += header.AddressInfo.MailingAddress_1 + "|";
-            line += header.AddressInfo.MailingAddress_2 + "|";
-            line += header.AddressInfo.City + "|";
-            line += header.AddressInfo.State + "|";
-            line += header.AddressInfo.Zip + "|";
+            line += header.Account_No+"|";
+            line += header.Customer_Name + "|";
+            line += header.Class_AddressInformation.Mailing_Address_1 + "|";
+            line += header.Class_AddressInformation.Mailing_Address_2 + "|";
+            line += header.Class_AddressInformation.City + "|";
+            line += header.Class_AddressInformation.State + "|";
+            line += header.Class_AddressInformation.Zip + "|";
             return line;
         }
         public string CreateInvoiceRecordLine_Invoice(BillHeader header)
@@ -92,16 +103,16 @@ namespace FileOps.IO
 
             string First_Notification_Date = dateTime.AddDays(5).ToString("MM/dd/yyyy");
 
-            string Second_Notifaction_Date = header.DueDate.AddDays(-3).ToString("MM/dd/yyyy");
+            string Second_Notifaction_Date = header.Due_Dt.AddDays(-3).ToString("MM/dd/yyyy");
 
             line += _FieldTable["JJ"]+ "~" + header.InvoiceFormat+"|";
-            line += header.InvoiceNo + "|";
-            line += header.BillDate + "|";
-            line += header.DueDate + "|";
-            line += header.BillInfo.BillAmount + "|";
+            line += header.Invoice_No + "|";
+            line += header.Bill_Dt + "|";
+            line += header.Due_Dt + "|";
+            line += header.Class_BillInfo.Bill_Amount + "|";
             line += _FieldTable["OO"] + "~" + First_Notification_Date + "|";
             line += _FieldTable["PP"] + "~" + Second_Notifaction_Date + "|";
-            line += header.BillInfo.BalanceDue + "|";
+            line += header.Class_BillInfo.bal + "|";
             line += Current_Date;
             line += header.AddressInfo;
 
