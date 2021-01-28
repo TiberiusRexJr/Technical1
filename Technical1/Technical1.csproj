@@ -46,6 +46,8 @@
   <ItemGroup>
     <Compile Include="FileOps\IO.cs" />
     <Compile Include="FileOps\Parsing.cs" />
+    <Compile Include="Model\AddressInformation.cs" />
+    <Compile Include="Model\Bill.cs" />
     <Compile Include="Model\BillHeader.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
