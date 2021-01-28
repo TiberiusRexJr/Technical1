@@ -51,9 +51,19 @@ namespace FileOps.IO
 
         #region CreateHeaders
 
-        public void CreateInvoiceHeader(int invoiceRecordCount, int invoiceRecordTotalAmount)
-        { 
+        public string CreateInvoiceHeader(int invoiceRecordCount, int invoiceRecordTotalAmount)
+        {
+            string line = string.Empty;
+
+            string Customer_GUID = Guid.NewGuid().ToString();
+            string Current_Date = DateTime.Today.ToString("MM/dd/yyyy");
             
+            line += _FieldTable["2"] +"~"+Customer_GUID+ "|";
+            line += Current_Date + "|";
+            line += _FieldTable["5"] + "~" + invoiceRecordCount.ToString() + "|";
+            line += _FieldTable["6"] + "~" + invoiceRecordTotalAmount.ToString();
+
+            return line;
         }
 
         #endregion
