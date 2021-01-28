@@ -112,9 +112,9 @@ namespace FileOps.IO
             line += header.Class_BillInfo.Bill_Amount + "|";
             line += _FieldTable["OO"] + "~" + First_Notification_Date + "|";
             line += _FieldTable["PP"] + "~" + Second_Notifaction_Date + "|";
-            line += header.Class_BillInfo.bal + "|";
+            line += header.Class_BillInfo.Balance_Due + "|";
             line += Current_Date;
-            line += header.AddressInfo;
+            line += header.SERVICE_ADDRESS;
 
             return line;
         }
