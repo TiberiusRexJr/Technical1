@@ -6,18 +6,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Technical1.Model;
-namespace FileOps.IO
+
+namespace Technical1.FileOps
 {
-    class IO
+    class Io
     {
         #region Constants
 
-        static Dictionary<string, string> _FieldTable = new Dictionary<string, string>();
+         Dictionary<string, string> _FieldTable = new Dictionary<string, string>();
+
+        private readonly string  XML_FILENAME = "BillFile";
 
         #endregion
 
         #region Constructors
-        public IO()
+        public Io()
         {
             _FieldTable.Add("2", "8203ACC7-2094-43CC-8F7A-B8F19AA9BDA2");
             _FieldTable.Add("5", "Count of IH records");
@@ -29,19 +32,24 @@ namespace FileOps.IO
         #endregion
 
         #region ReadFile
-        public XmlNodeList GetXMLData(string filePath,string nodeName)
+        public XmlNodeList GetXMLData(string filePath, string nodeName)
         {
             XmlDocument xml = new XmlDocument();
             XmlNodeList Bill_Headers = default;
+
+            if (String.IsNullOrEmpty(filePath) || String.IsNullOrEmpty(nodeName))
+            {
+                return Bill_Headers;
+            }
 
             FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
 
             xml.Load(fs);
 
-            Bill_Headers= xml.GetElementsByTagName(nodeName);
+            Bill_Headers = xml.GetElementsByTagName(nodeName);
 
-            return Bill_Headers; 
-            
+            return Bill_Headers;
+
         }
         public void ReadRPT()
         {
@@ -53,23 +61,51 @@ namespace FileOps.IO
 
         #region WriteFile
 
-        public void WriteToRPT(string fileName,List<BillHeader> billHeaders)
+        public bool WriteToRPT(string writeToDir,string header,List<InvoiceBill> writeData)
         {
+            bool status = false;
 
+            if(string.IsNullOrEmpty(writeToDir)|string.IsNullOrEmpty(header)|writeData==null)
+            {
+                return status;    
+            }
+
+            string filePathComplete = writeToDir + "/" + this.XML_FILENAME + "-" + DateTime.Today.ToString("mmddyyyy") + ".rpt";
+
+
+            try
+            {
+
+            }
+            catch (Exception e)
+            {
+
+            }
+
+
+            return status;
         }
 
         #endregion
 
         #region CreateHeaders
 
-        public string CreateInvoiceHeader(int invoiceRecordCount, int invoiceRecordTotalAmount)
+        public string CreateInvoiceHeader(List<BillHeader> billList)
         {
             string line = string.Empty;
 
             string Customer_GUID = Guid.NewGuid().ToString();
             string Current_Date = DateTime.Today.ToString("MM/dd/yyyy");
-            
-            line += _FieldTable["2"] +"~"+Customer_GUID+ "|";
+
+            int invoiceRecordCount = billList.Count;
+            double invoiceRecordTotalAmount = default;
+
+            foreach (BillHeader b in billList)
+            {
+                invoiceRecordTotalAmount += b.Class_BillInfo.Bill_Amount;
+            }
+
+            line += _FieldTable["2"] + "~" + Customer_GUID + "|";
             line += Current_Date + "|";
             line += _FieldTable["5"] + "~" + invoiceRecordCount.ToString() + "|";
             line += _FieldTable["6"] + "~" + invoiceRecordTotalAmount.ToString();
@@ -82,9 +118,9 @@ namespace FileOps.IO
         #region CreateLines
         public string CreateInvoiceRecordLine_Address(BillHeader header)
         {
-            
+
             string line = string.Empty;
-            line += header.Account_No+"|";
+            line += header.Account_No + "|";
             line += header.Customer_Name + "|";
             line += header.Class_AddressInformation.Mailing_Address_1 + "|";
             line += header.Class_AddressInformation.Mailing_Address_2 + "|";
@@ -93,6 +129,7 @@ namespace FileOps.IO
             line += header.Class_AddressInformation.Zip + "|";
             return line;
         }
+
         public string CreateInvoiceRecordLine_Invoice(BillHeader header)
         {
             string line = string.Empty;
@@ -105,7 +142,7 @@ namespace FileOps.IO
 
             string Second_Notifaction_Date = header.Due_Dt.AddDays(-3).ToString("MM/dd/yyyy");
 
-            line += _FieldTable["JJ"]+ "~" + header.InvoiceFormat+"|";
+            line += _FieldTable["JJ"] + "~" + header.InvoiceFormat + "|";
             line += header.Invoice_No + "|";
             line += header.Bill_Dt + "|";
             line += header.Due_Dt + "|";
@@ -119,5 +156,30 @@ namespace FileOps.IO
             return line;
         }
         #endregion
+
+        #region Create Write Data
+
+        public ValueTuple<string, List<InvoiceBill>> CreateWriteData(List<BillHeader> billHeaders)
+        {
+            string Header = default;
+            List<InvoiceBill> WriteData = default;
+
+            Header = CreateInvoiceHeader(billHeaders);
+
+            foreach(BillHeader bh in billHeaders)
+            {
+                InvoiceBill ib = new InvoiceBill();
+                ib.AddressLine = CreateInvoiceRecordLine_Address(bh);
+                ib.InvoiceLine = CreateInvoiceRecordLine_Invoice(bh);
+                WriteData.Add(ib);
+            }
+
+            return (Header, WriteData);
+        }
+
+        #endregion
+
     }
+
+
 }

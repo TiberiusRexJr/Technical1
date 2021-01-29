@@ -27,9 +27,14 @@ namespace Technical1.FileOps
         #region Parse
         public List<BillHeader> ParseXML(XmlNodeList nodeList,BillHeader bill)
         {
-         
 
             List<BillHeader> invoiceRecords = new List<BillHeader>();
+
+            if (nodeList==null || bill==null)
+            {
+                return invoiceRecords;
+            }
+
 
             foreach(XmlNode node in nodeList)
             {

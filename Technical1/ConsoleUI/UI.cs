@@ -1,15 +1,20 @@
 ﻿using System;
+using System.Xml;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using Technical1.FileOps;
+using Technical1.Model;
 namespace Technical1.ConsoleUI
 {
-    
+
     class UI
     {
+        private Parsing _parse = new Parsing();
+        private Io _io = new Io();
+        private BillHeader _bh = new BillHeader();
         public void MainLoop()
         {
             UI ui = new UI();
@@ -64,29 +69,49 @@ namespace Technical1.ConsoleUI
 
         }
 
+        #region Main Functionality
         public void XML_To_RPT()
         {
-            OpenFileDialog fdb = new OpenFileDialog();
 
-            fdb.Filter = "xml files (*.xml)|*.xml";
-            fdb.FilterIndex = 1;
-            fdb.Multiselect = false;
 
             string filePath = string.Empty;
-            string StatusMessage = string.Empty;
+            string outputDir = string.Empty;
 
-            Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.WriteLine("Choose a XML File to Parse");
-            Console.ResetColor();
+            string StatusMessage = "Failure";
 
-            if (fdb.ShowDialog()==DialogResult.OK)
+            string _ = "Choose a XML file to parse";
+            Messenger(MessengeType.CallToAction,_);
+
+            filePath = GetFile();
+            outputDir = GetOutputDir();
+
+            if(filePath==null||outputDir==null)
             {
-                filePath = fdb.FileName;
-                Console.WriteLine(filePath);
-                Console.ReadLine();
+                string msg = "Please select a valid File and Output directory";
+                Messenger(MessengeType.Failure, msg);
 
-                StatusMessage = "Success";
+                MainLoop();
             }
+           
+
+            XmlNodeList nodes = _io.GetXMLData(filePath, _bh.NodeName);
+
+            if (nodes != null)
+            {
+                List<BillHeader> billHeadersList = _parse.ParseXML(nodes, _bh);
+
+                if (billHeadersList != null)
+                {
+                    var writeData = _io.CreateWriteData(billHeadersList);
+
+                }
+
+            }
+
+
+
+            StatusMessage = "Success";
+
 
             Console.WriteLine(Environment.NewLine);
             Console.ForegroundColor = ConsoleColor.Green;
@@ -155,5 +180,87 @@ namespace Technical1.ConsoleUI
 
             MainLoop();
         }
+
+
+        #endregion
+        #region Get Output Dir & File Path
+        public string GetOutputDir()
+        {
+            string outputDir = string.Empty;
+
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+            fbd.Description = "Select a File Destination";
+
+
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                outputDir = fbd.SelectedPath;
+            }
+
+            return outputDir;
+        }
+
+        public string GetFile()
+        {
+            string filePath = string.Empty;
+
+            OpenFileDialog fdb = new OpenFileDialog();
+
+            fdb.Filter = "xml files (*.xml)|*.xml";
+            fdb.FilterIndex = 1;
+            fdb.Multiselect = false;
+
+            if (fdb.ShowDialog() == DialogResult.OK)
+            {
+                filePath = fdb.FileName;
+
+
+            };
+
+            return filePath;
+        }
+
+        #endregion
+
+        #region Messenger
+        public void Messenger(MessengeType messengeType,string message)
+        {
+            switch(messengeType.Value)
+            {
+                case "Success": Console.ForegroundColor = ConsoleColor.Green;
+                    break;
+                case "Failure":
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    break;
+                case "CallToAction":
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    break;
+            }
+            Console.WriteLine(Environment.NewLine);
+            Console.WriteLine(message);
+            Console.WriteLine(Environment.NewLine);
+            Console.ResetColor();
+
+        }
+        #endregion
+
+        #region Messenger Enumeration Class
+        public class MessengeType
+        {
+            #region Constructor
+            private MessengeType(string value) { Value = value; }
+            #endregion
+            #region Variables
+            public string Value { get; set; }
+            #endregion
+
+            #region Properties
+            public static MessengeType Success { get { return new MessengeType("Success"); } }
+            public static MessengeType Failure { get { return new MessengeType("Failure"); } }
+            public static MessengeType CallToAction { get { return new MessengeType("CallToAction"); } }
+
+            #endregion
+        }
+        #endregion
     }
 }

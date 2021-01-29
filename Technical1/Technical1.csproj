@@ -46,7 +46,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleUI\UI.cs" />
-    <Compile Include="FileOps\IO.cs" />
+    <Compile Include="Model\InvoiceBill.cs" />
+    <Compile Include="FileOps\Io.cs" />
     <Compile Include="FileOps\Parsing.cs" />
     <Compile Include="Model\AddressInformation.cs" />
     <Compile Include="Model\Bill.cs" />
