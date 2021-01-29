@@ -53,7 +53,7 @@ namespace FileOps.IO
 
         #region WriteFile
 
-        public void WriteRPT()
+        public void WriteToRPT(string fileName,List<BillHeader> billHeaders)
         {
 
         }
