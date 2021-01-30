@@ -26,5 +26,9 @@ namespace Technical1.Model
         public readonly string ParentNodeName="BILL_HEADER";
         #endregion
 
+        #region SQLTableProperties
+        public int CustomerID { get; set; }
+        #endregion
+
     }
 }

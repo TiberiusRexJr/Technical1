@@ -42,17 +42,46 @@ namespace Technical1.Database
         {
             bool status = false;
 
+            string queryIdentity = "Select @@Identity";
+            OleDbCommand queryIdentityCommand = new OleDbCommand(queryIdentity, con);
+
             if (dataList==null)
             {
                 return status;
             }
 
-            
             try
             {
                 con.Open();
-                
+
+               foreach(BillHeader b in dataList)
+                {
+                    OleDbCommand customerCommand = PrepareCustomerCommand(b);
+                    
+                    if(customerCommand.ExecuteNonQuery()==1)
+                    {
+                        b.Class_BillInfo.CustomerID = Convert.ToInt32(queryIdentityCommand.ExecuteScalar());
+
+                        OleDbCommand billCommand = PrepareBillCommand(b);
+
+                        if(billCommand.ExecuteNonQuery()==1)
+                        {
+                            status = true;
+                        }
+                        else
+                        {
+                            return status=false;
+                        }
+
+                    }
+                    else
+                    {
+                        return status=false;
+                    }
+                }
+
             }
+
             catch (OleDbException e)
             {
                 return status;
@@ -62,22 +91,16 @@ namespace Technical1.Database
                 con.Close();
             }
 
-           
-
             return status;
 
         }
 
-        public bool GetData(List<BillHeader> dataList)
+        public List<BillHeader> GetData()
         {
-            bool status = false;
+            List<BillHeader> returnData = new List<BillHeader>();
 
-            if (dataList == null)
-            {
-                return status;
-            }
 
-           
+            string getDataQuery = "SELECT c.CustomerId,c.CustomerName,c.AccountNumber,c.CustomerAddress,c.CustomerCity,c.CustomerState,c.CustomerZip,c.DateAdded   FROM Customer";
             try
             {
                 con.Open();
@@ -85,7 +108,7 @@ namespace Technical1.Database
             }
             catch (OleDbException e)
             {
-                return status;
+                return returnData;
             }
             finally
             {
@@ -93,34 +116,12 @@ namespace Technical1.Database
             }
            
 
-            return status;
+            return returnData;
         }
 
-        private ValueTuple<List<OleDbCommand>, List<OleDbCommand>> PrepareCommands(List<BillHeader> dataList)
+        private OleDbCommand PrepareCustomerCommand(BillHeader b)
         {
-            List<OleDbCommand> CustomerCommands = new List<OleDbCommand>();
-            List<OleDbCommand> BillCommands = new List<OleDbCommand>();
-
-
-            string queryInsertIntoBill = "Insert into Bills(BillDate,BillNumber,BillAmount,FormatGUID,AccountBalance,DueDate,ServiceAddress,FirstEmailDate,SecondEmailDate) VALUES(?,?,?,?,?,?,?,?,?)";
-
             string queryInsertIntoCustomer = "Insert into Customer(CustomerName,AccountNumber,CustomerAddress,CustomerCity,CustomerState,CustomerZip) VALUES(?,?,?,?,?,?)";
-
-            foreach(BillHeader b in dataList)
-            {
-                OleDbCommand billCommand = new OleDbCommand(queryInsertIntoBill, con);
-
-                billCommand.Parameters.AddWithValue("@BillDate", b.Bill_Dt);
-                billCommand.Parameters.AddWithValue("@BillNumber", b.Invoice_No);
-                billCommand.Parameters.AddWithValue("@BillAmount", b.Class_BillInfo.Bill_Amount);
-                billCommand.Parameters.AddWithValue("@FormatGUID", b.Class_BillInfo.FormatGUID);
-                billCommand.Parameters.AddWithValue("@AccountBalance", b.Class_BillInfo.Balance_Due);
-                billCommand.Parameters.AddWithValue("@DueDate", b.Due_Dt);
-                billCommand.Parameters.AddWithValue("@ServiceAddress", b.SERVICE_ADDRESS);
-                billCommand.Parameters.AddWithValue("@FirstEmailDate", b.Class_BillInfo.FirstEmailDate);
-                billCommand.Parameters.AddWithValue("@SecondEmailDate", b.Class_BillInfo.SecondEmailDate);
-
-                BillCommands.Add(billCommand);
 
                 OleDbCommand customerCommand = new OleDbCommand(queryInsertIntoCustomer, con);
 
@@ -131,11 +132,28 @@ namespace Technical1.Database
                 customerCommand.Parameters.AddWithValue("@CustomerState", b.Class_AddressInformation.State);
                 customerCommand.Parameters.AddWithValue("@CustomerZip", b.Class_AddressInformation.Zip);
 
-                CustomerCommands.Add(customerCommand);
-            }
+            
+            return customerCommand;
+        }
 
+        private OleDbCommand PrepareBillCommand(BillHeader b)
+        {
 
-            return (CustomerCommands, BillCommands);
+            string queryInsertIntoBill = "Insert into Bills(BillDate,BillAmount,FormatGUID,AccountBalance,DueDate,ServiceAddress,FirstEmailDate,SecondEmailDate,CustomerID) VALUES(?,?,?,?,?,?,?,?,?)";
+            
+                OleDbCommand billCommand = new OleDbCommand(queryInsertIntoBill, con);
+
+                billCommand.Parameters.AddWithValue("@BillDate", b.Bill_Dt);
+                billCommand.Parameters.AddWithValue("@BillAmount", b.Class_BillInfo.Bill_Amount);
+                billCommand.Parameters.AddWithValue("@FormatGUID", b.Class_BillInfo.FormatGUID);
+                billCommand.Parameters.AddWithValue("@AccountBalance", b.Class_BillInfo.Balance_Due);
+                billCommand.Parameters.AddWithValue("@DueDate", b.Due_Dt);
+                billCommand.Parameters.AddWithValue("@ServiceAddress", b.SERVICE_ADDRESS);
+                billCommand.Parameters.AddWithValue("@FirstEmailDate", b.Class_BillInfo.FirstEmailDate);
+                billCommand.Parameters.AddWithValue("@SecondEmailDate", b.Class_BillInfo.SecondEmailDate);
+                billCommand.Parameters.AddWithValue("@CustomerID", b.Class_BillInfo.CustomerID);
+
+            return billCommand;
         }
 
         #endregion
