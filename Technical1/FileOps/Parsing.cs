@@ -51,8 +51,8 @@ namespace Technical1.FileOps
                 #endregion
 
                 #region Node Bill Data
-                b.Class_BillInfo.Bill_Amount = Convert.ToDouble(node.SelectSingleNode("//" + nameof(b.Class_BillInfo.NodeName) + "/" + nameof(b.Class_BillInfo.Bill_Amount))?.InnerText);
-                b.Class_BillInfo.Balance_Due = Convert.ToDouble(node.SelectSingleNode("//" + nameof(b.Class_BillInfo.NodeName) + "/" + nameof(b.Class_BillInfo.Balance_Due))?.InnerText);
+                b.Class_BillInfo.Bill_Amount = Convert.ToDecimal(node.SelectSingleNode("//" + nameof(b.Class_BillInfo.NodeName) + "/" + nameof(b.Class_BillInfo.Bill_Amount))?.InnerText);
+                b.Class_BillInfo.Balance_Due = Convert.ToDecimal(node.SelectSingleNode("//" + nameof(b.Class_BillInfo.NodeName) + "/" + nameof(b.Class_BillInfo.Balance_Due))?.InnerText);
                 b.Class_BillInfo.Bill_Run_Dt = DateTime.ParseExact((node.SelectSingleNode("//" + nameof(b.Class_BillInfo.NodeName) + "/" + nameof(b.Class_BillInfo.Balance_Due))?.InnerText),"MM/DD/YYYY",null);
                 b.Class_BillInfo.Bill_Run_Seq = Convert.ToInt32(node.SelectSingleNode("//" + nameof(b.Class_BillInfo.NodeName) + "/" + nameof(b.Class_BillInfo.Bill_Run_Seq))?.InnerText);
                 b.Class_BillInfo.Bill_Run_Tm= Convert.ToInt32(node.SelectSingleNode("//" + nameof(b.Class_BillInfo.NodeName) + "/" + nameof(b.Class_BillInfo.Bill_Run_Tm))?.InnerText);
@@ -64,7 +64,7 @@ namespace Technical1.FileOps
                 b.Class_AddressInformation.Mailing_Address_1= node.SelectSingleNode("//" + nameof(b.Class_AddressInformation.NodeName) + "/" + nameof(b.Class_AddressInformation.Mailing_Address_1))?.InnerText;
                 b.Class_AddressInformation.Mailing_Address_2= node.SelectSingleNode("//" + nameof(b.Class_AddressInformation.NodeName) + "/" + nameof(b.Class_AddressInformation.Mailing_Address_2))?.InnerText;
                 b.Class_AddressInformation.City = node.SelectSingleNode("//" + nameof(b.Class_AddressInformation.NodeName) + "/" + nameof(b.Class_AddressInformation.City))?.InnerText;
-                b.Class_AddressInformation.Zip= Convert.ToInt32(node.SelectSingleNode("//" + nameof(b.Class_AddressInformation.NodeName) + "/" + nameof(b.Class_AddressInformation.Zip))?.InnerText);
+                b.Class_AddressInformation.Zip=node.SelectSingleNode("//" + nameof(b.Class_AddressInformation.NodeName) + "/" + nameof(b.Class_AddressInformation.Zip))?.InnerText;
 
 
                 #endregion

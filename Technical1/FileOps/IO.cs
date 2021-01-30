@@ -98,7 +98,7 @@ namespace Technical1.FileOps
             string Current_Date = DateTime.Today.ToString("MM/dd/yyyy");
 
             int invoiceRecordCount = billList.Count;
-            double invoiceRecordTotalAmount = default;
+            decimal invoiceRecordTotalAmount = default;
 
             foreach (BillHeader b in billList)
             {

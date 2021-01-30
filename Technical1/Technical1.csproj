@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConsoleUI\UI.cs" />
+    <Compile Include="Database\Db.cs" />
     <Compile Include="Model\InvoiceBill.cs" />
     <Compile Include="FileOps\Io.cs" />
     <Compile Include="FileOps\Parsing.cs" />
@@ -63,9 +64,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Database\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>

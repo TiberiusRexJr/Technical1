@@ -12,7 +12,7 @@ namespace Technical1.Model
         public string Mailing_Address_2 { get; set; }
         public string City { get; set; }
         public string State { get; set; }
-        public int Zip { get; set; }
+        public string Zip { get; set; }
 
         #region Xmlproperties
         public readonly string NodeName = "Address_Information";
