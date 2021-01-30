@@ -26,8 +26,12 @@ namespace Technical1.Model
         public readonly string ParentNodeName="BILL_HEADER";
         #endregion
 
-        #region SQLTableProperties
+        #region DataTable Properties
         public int CustomerID { get; set; }
+        public int ID { get; set; }
+        public string BillNumber { get; set; }
+        public DateTime DateAdded { get; set; }
+
         #endregion
 
     }

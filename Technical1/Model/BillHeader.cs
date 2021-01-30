@@ -31,6 +31,10 @@ namespace Technical1.Model
         public readonly string ParentNodeName = "BILL_HEADER_Dataset";
         #endregion
 
+        #region DataTable Properties
+        public DateTime DateAdded { get; set; }
+        #endregion
+
         #region Constructor
 
         #endregion
