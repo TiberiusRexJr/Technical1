@@ -25,12 +25,12 @@ namespace Technical1.FileOps
         #endregion
 
         #region Parse
-        public List<BillHeader> ParseXML(XmlNodeList nodeList,BillHeader bill)
+        public List<BillHeader> ParseXML(XmlNodeList nodeList)
         {
 
             List<BillHeader> invoiceRecords = new List<BillHeader>();
 
-            if (nodeList==null || bill==null)
+            if (nodeList==null)
             {
                 return invoiceRecords;
             }

@@ -15,7 +15,8 @@ namespace Technical1.FileOps
 
          Dictionary<string, string> _FieldTable = new Dictionary<string, string>();
 
-        private readonly string  XML_FILENAME = "BillFile";
+        private readonly string  RPT_FILENAME = "BillFile";
+        private readonly string CSV_FILENAME = "BillingReport";
 
         #endregion
 
@@ -31,7 +32,7 @@ namespace Technical1.FileOps
         }
         #endregion
 
-        #region ReadFile
+        #region ReadFiles
         public XmlNodeList GetXMLData(string filePath, string nodeName)
         {
             XmlDocument xml = new XmlDocument();
@@ -41,12 +42,21 @@ namespace Technical1.FileOps
             {
                 return Bill_Headers;
             }
+            try
+            {
 
             FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
 
-            xml.Load(fs);
+                xml.Load(fs);
 
-            Bill_Headers = xml.GetElementsByTagName(nodeName);
+                Bill_Headers = xml.GetElementsByTagName(nodeName);
+            }
+            catch(IOException e)
+            {
+                return Bill_Headers;
+            }
+
+            
 
             return Bill_Headers;
 
@@ -70,25 +80,73 @@ namespace Technical1.FileOps
                 return status;    
             }
 
-            string filePathComplete = writeToDir + "/" + this.XML_FILENAME + "-" + DateTime.Today.ToString("mmddyyyy") + ".rpt";
-
-
+            string filePathComplete = writeToDir + "/" + this.RPT_FILENAME + "-" + DateTime.Today.ToString("mmddyyyy") + ".rpt";
+            
+            
             try
             {
+                using (StreamWriter outputFile = new StreamWriter(filePathComplete))
+                {
+                    outputFile.WriteLine(header);
+
+                    foreach (InvoiceBill b in writeData)
+                    {
+                        outputFile.WriteLine(b.AddressLine);
+                        outputFile.WriteLine(b.InvoiceLine);
+                    }
+                    
+
+                    status = true;
+                }
+
+                    
 
             }
-            catch (Exception e)
+            catch (IOException e)
             {
-
+                return status;
             }
 
 
             return status;
         }
 
+        public bool WriteToCSV(string writeToDir,string header,List<BillHeader> writeData)
+        {
+            bool status = false;
+
+
+            string filePathComplete = writeToDir + "/" + this.CSV_FILENAME + ".rpt";
+
+            List<string> wData = CreateLineDataCSV(writeData);
+
+            try
+            {
+                using (StreamWriter outputFile = new StreamWriter(filePathComplete))
+                {
+                    outputFile.WriteLine(header);
+
+                    foreach (string s in wData)
+                    {
+                        outputFile.WriteLine(s);
+                    }
+
+
+                    status = true;
+                }
+
+            }
+            catch (IOException e)
+            {
+                return status;
+            }
+            return status;
+        }   
+
         #endregion
 
-        #region CreateHeaders
+
+        #region Create Write Data
 
         public string CreateInvoiceHeader(List<BillHeader> billList)
         {
@@ -113,12 +171,45 @@ namespace Technical1.FileOps
             return line;
         }
 
+        #region Create Write Data CSV
+        public List<string> CreateLineDataCSV(List<BillHeader> headerList)
+        {
+            List<string> lineData = new List<string>();
+
+            foreach(BillHeader b in headerList)
+            {
+
+               string line = b.Class_BillInfo.CustomerID.ToString() + "," + b.Customer_Name + "," + b.Account_No + "," + b.Class_AddressInformation.Mailing_Address_1 + "," + b.Class_AddressInformation.City + "," + b.Class_AddressInformation.State + "," + b.Class_AddressInformation.Zip + "," + b.Class_BillInfo.ID.ToString() + "," + b.Bill_Dt.ToString() + "," + b.Class_BillInfo.BillNumber + "," + b.Class_BillInfo.Balance_Due.ToString() + "," + b.Due_Dt.ToString() + "," + b.Class_BillInfo.Bill_Amount.ToString() + "," + b.Class_BillInfo.FormatGUID + "," + b.DateAdded.ToString();
+
+                lineData.Add(line);
+            }
+
+            return lineData;
+        }
         #endregion
 
-        #region CreateLines
+        #region Create Write Data RPT
+        public (string Header, List<InvoiceBill>WriteData) CreateWriteDataRPT(List<BillHeader> billHeaders)
+        {
+            string Header = default;
+            List<InvoiceBill> WriteData = default;
+
+            Header = CreateInvoiceHeader(billHeaders);
+
+            foreach(BillHeader bh in billHeaders)
+            {
+                InvoiceBill ib = new InvoiceBill();
+                ib.AddressLine = CreateInvoiceRecordLine_Address(bh);
+                ib.InvoiceLine = CreateInvoiceRecordLine_Invoice(bh);
+                WriteData.Add(ib);
+            }
+
+            return (Header, WriteData);
+        }
+
         public string CreateInvoiceRecordLine_Address(BillHeader header)
         {
-
+            
             string line = string.Empty;
             line += header.Account_No + "|";
             line += header.Customer_Name + "|";
@@ -127,6 +218,7 @@ namespace Technical1.FileOps
             line += header.Class_AddressInformation.City + "|";
             line += header.Class_AddressInformation.State + "|";
             line += header.Class_AddressInformation.Zip + "|";
+
             return line;
         }
 
@@ -155,27 +247,8 @@ namespace Technical1.FileOps
 
             return line;
         }
+
         #endregion
-
-        #region Create Write Data
-
-        public ValueTuple<string, List<InvoiceBill>> CreateWriteData(List<BillHeader> billHeaders)
-        {
-            string Header = default;
-            List<InvoiceBill> WriteData = default;
-
-            Header = CreateInvoiceHeader(billHeaders);
-
-            foreach(BillHeader bh in billHeaders)
-            {
-                InvoiceBill ib = new InvoiceBill();
-                ib.AddressLine = CreateInvoiceRecordLine_Address(bh);
-                ib.InvoiceLine = CreateInvoiceRecordLine_Invoice(bh);
-                WriteData.Add(ib);
-            }
-
-            return (Header, WriteData);
-        }
 
         #endregion
 

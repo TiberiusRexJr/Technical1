@@ -15,6 +15,7 @@ namespace Technical1.ConsoleUI
         private Parsing _parse = new Parsing();
         private Io _io = new Io();
         private BillHeader _bh = new BillHeader();
+
         public void MainLoop()
         {
             UI ui = new UI();
@@ -73,7 +74,6 @@ namespace Technical1.ConsoleUI
         public void XML_To_RPT()
         {
 
-
             string filePath = string.Empty;
             string outputDir = string.Empty;
 
@@ -98,12 +98,16 @@ namespace Technical1.ConsoleUI
 
             if (nodes != null)
             {
-                List<BillHeader> billHeadersList = _parse.ParseXML(nodes, _bh);
+                List<BillHeader> billHeadersList = _parse.ParseXML(nodes);
 
                 if (billHeadersList != null)
                 {
-                    var writeData = _io.CreateWriteData(billHeadersList);
+                    var writeData = _io.CreateWriteDataRPT(billHeadersList);
+                    
+                    if(writeData.Header!=null||writeData.WriteData!=null)
+                    {
 
+                    }
                 }
 
             }
@@ -183,6 +187,7 @@ namespace Technical1.ConsoleUI
 
 
         #endregion
+
         #region Get Output Dir & File Path
         public string GetOutputDir()
         {
