@@ -116,7 +116,7 @@ namespace Technical1.FileOps
             bool status = false;
 
 
-            string filePathComplete = writeToDir + "/" + this.CSV_FILENAME + ".rpt";
+            string filePathComplete = writeToDir + "/" + this.CSV_FILENAME + ".txt";
 
             List<string> wData = CreateLineDataCSV(writeData);
 

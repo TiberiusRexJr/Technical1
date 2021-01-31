@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Xml;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,9 @@ namespace Technical1.FileOps
     {
         #region Constants
 
+
+        #endregion
+        #region PuesdoEnumerations
 
         #endregion
         #region Properties
@@ -74,6 +78,77 @@ namespace Technical1.FileOps
 
             return invoiceRecords;
             
+        }
+
+        public List<BillHeader> ParseRPT(string filePath)
+        {
+            List<BillHeader> dataList = new List<BillHeader>();
+
+            if(string.IsNullOrEmpty(filePath))
+            {
+                return dataList;
+            }
+
+            using (StreamReader reader = new StreamReader(filePath))
+            {
+
+                string header=reader.ReadLine();
+
+                string line = string.Empty;
+                List<string> rowData = new List<string>();
+                while((line=reader.ReadLine())!=null)
+                {
+                    rowData.Add(line);
+
+                    if(rowData.Count==2)
+                    {
+                       BillHeader b= ParseRPT(rowData);
+                        if(b!=null)
+                        {
+                            dataList.Add(b);
+                        }
+
+                        rowData.Clear();
+                    }
+
+                }
+
+            }
+
+                return dataList;
+        }
+
+        private BillHeader ParseRPT(List<string> rowData)
+        {
+            BillHeader bill = new BillHeader();
+            List<string> valuedData = new List<string>();
+            string StopAt = "|";
+
+            if(rowData==null||rowData.Count!=2)
+            {
+                return bill;
+            }
+
+            foreach(string s in rowData)
+            {
+                string str = s;
+                while(!string.IsNullOrEmpty(str))
+                {
+                    int StopChar = str.IndexOf(StopAt, StringComparison.Ordinal);
+                    var _= str.Substring(0,StopChar);
+                    valuedData.Add(_);
+
+                    str = str.Substring(StopChar+1);
+
+
+                }
+                    
+            }
+
+
+
+
+            return bill;
         }
 
         #endregion
