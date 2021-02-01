@@ -153,7 +153,7 @@ namespace Technical1.FileOps
         {
             string line = string.Empty;
 
-            string Customer_GUID = Guid.NewGuid().ToString();
+            string Client_GUID = Guid.NewGuid().ToString();
             string Current_Date = DateTime.Today.ToString("MM/dd/yyyy");
 
             int invoiceRecordCount = billList.Count;
@@ -163,11 +163,7 @@ namespace Technical1.FileOps
             {
                 invoiceRecordTotalAmount += b.Class_BillInfo.Bill_Amount;
             }
-
-            line += _FieldTable["2"] + "~" + Customer_GUID + "|";
-            line += Current_Date + "|";
-            line += _FieldTable["5"] + "~" + invoiceRecordCount.ToString() + "|";
-            line += _FieldTable["6"] + "~" + invoiceRecordTotalAmount.ToString();
+            line = "1~FR|"+ _FieldTable["2"] + "~"+ Client_GUID + "|3~Sample UT file|4~"+ Current_Date +"|~"+ invoiceRecordCount + "|~"+invoiceRecordTotalAmount+"";
 
             return line;
         }
@@ -234,13 +230,8 @@ namespace Technical1.FileOps
         {
             
             string line = string.Empty;
-            line += header.Account_No + "|";
-            line += header.Customer_Name + "|";
-            line += header.Class_AddressInformation.Mailing_Address_1 + "|";
-            line += header.Class_AddressInformation.Mailing_Address_2 + "|";
-            line += header.Class_AddressInformation.City + "|";
-            line += header.Class_AddressInformation.State + "|";
-            line += header.Class_AddressInformation.Zip + "|";
+
+            line = "AA~CT|BB~"+header.Account_No+"|VV~"+header.Customer_Name+"|CC~"+ header.Class_AddressInformation.Mailing_Address_1 + "|DD~"+ header.Class_AddressInformation.Mailing_Address_2 + "|EE~"+ header.Class_AddressInformation.City + "|FF~"+ header.Class_AddressInformation.State + "|GG~"+ header.Class_AddressInformation.Zip + "";
 
             return line;
         }
@@ -258,18 +249,8 @@ namespace Technical1.FileOps
 
             string Second_Notifaction_Date = header.Due_Dt.AddDays(-3).ToString("MM/dd/yyyy");
 
-            header.SERVICE_ADDRESS = this.SERVICE_ADDRESS;
+            line = "HH~IH|II~R|"+_FieldTable["2"]+"~"+header.InvoiceFormat+"|KK~"+header.Invoice_No+"|LL~"+header.Bill_Dt.ToString("mm/dd/yyyy")+"|MM~"+header.Due_Dt.ToString("mm/dd/yyyy")+"|NN~"+header.Class_BillInfo.Bill_Amount+"|OO~"+First_Notification_Date+"|PP~"+Second_Notifaction_Date+"|QQ~"+header.Class_BillInfo.Balance_Due+"|RR~"+Current_Date+"|SS~"+header.Service_Address+"";
 
-            line += _FieldTable["JJ"] + "~" + header.InvoiceFormat + "|";
-            line += header.Invoice_No + "|";
-            line += header.Bill_Dt + "|";
-            line += header.Due_Dt + "|";
-            line += header.Class_BillInfo.Bill_Amount + "|";
-            line += _FieldTable["OO"] + "~" + First_Notification_Date + "|";
-            line += _FieldTable["PP"] + "~" + Second_Notifaction_Date + "|";
-            line += header.Class_BillInfo.Balance_Due + "|";
-            line += Current_Date;
-            line += header.SERVICE_ADDRESS;
 
             return line;
         }
