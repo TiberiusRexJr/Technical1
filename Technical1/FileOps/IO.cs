@@ -149,24 +149,7 @@ namespace Technical1.FileOps
 
         #region Create Write Data
 
-        private string CreateInvoiceHeader(List<BillHeader> billList)
-        {
-            string line = string.Empty;
-
-            string Client_GUID = Guid.NewGuid().ToString();
-            string Current_Date = DateTime.Today.ToString("MM/dd/yyyy");
-
-            int invoiceRecordCount = billList.Count;
-            decimal invoiceRecordTotalAmount = default;
-
-            foreach (BillHeader b in billList)
-            {
-                invoiceRecordTotalAmount += b.Class_BillInfo.Bill_Amount;
-            }
-            line = _FieldTable["2"] + "|"+ Current_Date +"|"+ invoiceRecordCount + "|"+invoiceRecordTotalAmount+"";
-
-            return line;
-        }
+        
 
         #region Create Write Data CSV
 
@@ -175,7 +158,7 @@ namespace Technical1.FileOps
             string Header = string.Empty;
             List<string> LineData = default;
 
-            Header = CreateInvoiceHeader(dataList);
+            Header = CreateInvoiceHeaderCSV(dataList);
 
             if(Header==null)
             {
@@ -191,6 +174,7 @@ namespace Technical1.FileOps
             
             return (Header, LineData);
         }
+
         private List<string> CreateLineDataCSV(List<BillHeader> headerList)
         {
             List<string> lineData = new List<string>();
@@ -205,6 +189,27 @@ namespace Technical1.FileOps
 
             return lineData;
         }
+
+        private String CreateInvoiceHeaderCSV(List<BillHeader> billList)
+        {
+            string line = string.Empty;
+
+
+            string Current_Date = DateTime.Today.ToString("MM/dd/yyyy");
+
+            int invoiceRecordCount = billList.Count;
+            decimal invoiceRecordTotalAmount = default;
+
+            foreach (BillHeader b in billList)
+            {
+                invoiceRecordTotalAmount += b.Class_BillInfo.Bill_Amount;
+            }
+
+            line = _FieldTable["2"] + "," + Current_Date + "," + invoiceRecordCount + "," + invoiceRecordTotalAmount;
+
+
+            return line;
+        }
         #endregion
 
         #region Create Write Data RPT
@@ -213,7 +218,7 @@ namespace Technical1.FileOps
             string Header = string.Empty;
             List<InvoiceBill> WriteData = default;
 
-            Header = CreateInvoiceHeader(billHeaders);
+            Header = CreateInvoiceHeaderRPT(billHeaders);
 
             foreach(BillHeader bh in billHeaders)
             {
@@ -251,6 +256,25 @@ namespace Technical1.FileOps
 
             line = _FieldTable["JJ"]+"|"+header.Invoice_No+"|"+header.Bill_Dt.ToString("mm/dd/yyyy")+"|"+header.Due_Dt.ToString("mm/dd/yyyy")+"|"+header.Class_BillInfo.Bill_Amount+"|"+First_Notification_Date+"|"+Second_Notifaction_Date+"|"+header.Class_BillInfo.Balance_Due+"|"+Current_Date+"|"+header.Service_Address+"";
 
+
+            return line;
+        }
+
+        private string CreateInvoiceHeaderRPT(List<BillHeader> billList)
+        {
+            string line = string.Empty;
+
+            
+            string Current_Date = DateTime.Today.ToString("MM/dd/yyyy");
+
+            int invoiceRecordCount = billList.Count;
+            decimal invoiceRecordTotalAmount = default;
+
+            foreach (BillHeader b in billList)
+            {
+                invoiceRecordTotalAmount += b.Class_BillInfo.Bill_Amount;
+            }
+            line = _FieldTable["2"] + "|" + Current_Date + "|" + invoiceRecordCount + "|" + invoiceRecordTotalAmount + "";
 
             return line;
         }

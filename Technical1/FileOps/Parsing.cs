@@ -215,7 +215,7 @@ namespace Technical1.FileOps
             bill.Class_AddressInformation.Zip = valuedData[7];
 
             //HH line data
-            bill.InvoiceFormat = valuedData[11];
+            bill.FormatGUID = valuedData[11];
             bill.Invoice_No = valuedData[12];
             bill.Bill_Dt = DateTime.ParseExact(valuedData[13], "MM/DD/YYYY", null);
             bill.Due_Dt= DateTime.ParseExact(valuedData[14], "MM/DD/YYYY", null);

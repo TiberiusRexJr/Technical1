@@ -15,8 +15,7 @@ namespace Technical1.FileOps
             {
                
                 b.Service_Address = b.SERVICE_ADDRESS;
-                Guid guid = new Guid();
-                b.Customer_GUID = guid.ToString();
+                
 
             }
 
