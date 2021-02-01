@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Technical1.FileOps;
 using Technical1.Model;
+using Technical1.Database;
 namespace Technical1.ConsoleUI
 {
 
@@ -16,7 +17,7 @@ namespace Technical1.ConsoleUI
         private Io _io = new Io();
         private BillHeader _bh = new BillHeader();
         private MessageUI ui = new MessageUI();
-
+        private Db _db = new Db();
         #region Main Functionality
 
         public void MainLoop()
@@ -138,65 +139,72 @@ namespace Technical1.ConsoleUI
         public void XML_To_DB()
         {
             string outputDirectory = string.Empty;
-           
+            
 
             ui.ConsoleMessage(MessageType.CallToAction, "Choose A Folder to Save the File Too");
             ui.ConsolePause();
 
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-            fbd.Description = "Choose a Output Location";
+            outputDirectory = GetOutputDir();
 
+          List<BillHeader> parsedDataList=  _parse.ParseRPT(outputDirectory);
 
-            if (fbd.ShowDialog() == DialogResult.OK)
+            if(parsedDataList == null)
             {
-                outputDirectory = fbd.SelectedPath;
-                if(string.IsNullOrEmpty(outputDirectory))
-                {
-
-                ui.ConsoleMessage(MessageType.Status, "Directory Accepted");
-                }
-                else
-                {
-                    ui.ConsoleMessage(MessageType.Failure, "Directory Not Selected!");
-                    MainLoop();
-                }
-
-
-            }
-            else
-            {
-                ui.ConsoleMessage(MessageType.Failure, "Failed to Select a Output Directy, Try again Please");
+                ui.ConsoleMessage(MessageType.Failure, "Failed to Parse the RPT File!");
                 MainLoop();
             }
 
-            _parse.ParseRPT(outputDirectory);
+            if(_db.PutData(parsedDataList))
+            {
+                ui.ConsoleMessage(MessageType.Success, "File Successfully parsed and Saved to The Database");
+                ui.ConsolePause();
+                MainLoop();
+            }
+            else
+            {
+                ui.ConsoleMessage(MessageType.Failure, "Failed to save the Data to the Database!");
+                ui.ConsolePause();
+                MainLoop();
+            }
+
         }
 
         public void CSV_From_DB()
         {
             string outputDirectory = string.Empty;
-            string StatusMessage = string.Empty;
-
+         
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             fbd.Description = "Choose a Output Location";
 
+            outputDirectory = GetOutputDir();
 
-            if (fbd.ShowDialog() == DialogResult.OK)
+            List<BillHeader> dataList= _db.GetData();
+
+            if(dataList==null)
             {
-                outputDirectory = fbd.SelectedPath;
-                Console.WriteLine(outputDirectory);
+                ui.ConsoleMessage(MessageType.Failure, "Failed to get Data from the Database!");
+                MainLoop();
+            }    
 
-                Console.ReadLine();
+           (string Header,List<string> LineData) writeData= _io.CreateWriteDataCSV(dataList);
 
-                StatusMessage = "Success";
-
+           if(writeData.Header==null||writeData.LineData==null)
+            {
+                ui.ConsoleMessage(MessageType.Failure, "Failed to get Write Data!");
+                MainLoop();
             }
-            Console.WriteLine(Environment.NewLine);
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine(StatusMessage);
-            Console.WriteLine(Environment.NewLine);
-            Console.ResetColor();
 
+            if(_io.WriteToCSV(outputDirectory, writeData.Header, writeData.LineData))
+            {
+                ui.ConsoleMessage(MessageType.Success, "Operation Completed Successfully!");
+                MainLoop();
+            }
+            else
+            {
+                ui.ConsoleMessage(MessageType.Failure, "Operation Failed!!");
+                MainLoop();
+            }
+           
 
             MainLoop();
         }

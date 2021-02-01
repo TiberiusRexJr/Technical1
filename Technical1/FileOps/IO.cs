@@ -111,14 +111,14 @@ namespace Technical1.FileOps
             return status;
         }
 
-        public bool WriteToCSV(string writeToDir,string header,List<BillHeader> writeData)
+        public bool WriteToCSV(string writeToDir,string header,List<string> writeData)
         {
             bool status = false;
 
 
             string filePathComplete = writeToDir + "/" + this.CSV_FILENAME + ".txt";
 
-            List<string> wData = CreateLineDataCSV(writeData);
+           
 
             try
             {
@@ -126,7 +126,7 @@ namespace Technical1.FileOps
                 {
                     outputFile.WriteLine(header);
 
-                    foreach (string s in wData)
+                    foreach (string s in writeData)
                     {
                         outputFile.WriteLine(s);
                     }
@@ -148,7 +148,7 @@ namespace Technical1.FileOps
 
         #region Create Write Data
 
-        public string CreateInvoiceHeader(List<BillHeader> billList)
+        private string CreateInvoiceHeader(List<BillHeader> billList)
         {
             string line = string.Empty;
 
@@ -172,7 +172,29 @@ namespace Technical1.FileOps
         }
 
         #region Create Write Data CSV
-        public List<string> CreateLineDataCSV(List<BillHeader> headerList)
+
+        public (string Header,List<string>LineData) CreateWriteDataCSV(List<BillHeader> dataList)
+        {
+            string Header = string.Empty;
+            List<string> LineData = default;
+
+            Header = CreateInvoiceHeader(dataList);
+
+            if(Header==null)
+            {
+                return (Header, LineData);
+            }
+
+            LineData = CreateLineDataCSV(dataList);
+
+            if (LineData == null)
+            {
+                return (Header, LineData);
+            }
+            
+            return (Header, LineData);
+        }
+        private List<string> CreateLineDataCSV(List<BillHeader> headerList)
         {
             List<string> lineData = new List<string>();
 
@@ -191,7 +213,7 @@ namespace Technical1.FileOps
         #region Create Write Data RPT
         public (string Header, List<InvoiceBill>WriteData) CreateWriteDataRPT(List<BillHeader> billHeaders)
         {
-            string Header = default;
+            string Header = string.Empty;
             List<InvoiceBill> WriteData = default;
 
             Header = CreateInvoiceHeader(billHeaders);
@@ -207,7 +229,7 @@ namespace Technical1.FileOps
             return (Header, WriteData);
         }
 
-        public string CreateInvoiceRecordLine_Address(BillHeader header)
+        private string CreateInvoiceRecordLine_Address(BillHeader header)
         {
             
             string line = string.Empty;
@@ -222,7 +244,7 @@ namespace Technical1.FileOps
             return line;
         }
 
-        public string CreateInvoiceRecordLine_Invoice(BillHeader header)
+        private string CreateInvoiceRecordLine_Invoice(BillHeader header)
         {
             string line = string.Empty;
 
