@@ -151,9 +151,11 @@ namespace Technical1.Database
 
         private OleDbCommand PrepareCustomerCommand(BillHeader b)
         {
-            string queryInsertIntoCustomer = "Insert into Customer(CustomerName,AccountNumber,CustomerAddress,CustomerCity,CustomerState,CustomerZip) VALUES(?,?,?,?,?,?)";
+            string queryInsertIntoCustomer = "Insert into Customer(CustomerName,AccountNumber,CustomerAddress,CustomerCity,CustomerState,CustomerZip,DateAdded) VALUES(?,?,?,?,?,?,?)";
 
                 OleDbCommand customerCommand = new OleDbCommand(queryInsertIntoCustomer, con);
+
+            b.DateAdded = DateTime.Today;
 
                 customerCommand.Parameters.AddWithValue("@CustomerName", b.Customer_Name);
                 customerCommand.Parameters.AddWithValue("@AccountNumber", b.Account_No);
@@ -161,20 +163,22 @@ namespace Technical1.Database
                 customerCommand.Parameters.AddWithValue("@CustomerCity", b.Class_AddressInformation.City);
                 customerCommand.Parameters.AddWithValue("@CustomerState", b.Class_AddressInformation.State);
                 customerCommand.Parameters.AddWithValue("@CustomerZip", b.Class_AddressInformation.Zip);
+                customerCommand.Parameters.AddWithValue("@CustomerZip", b.DateAdded);
 
-            
+
             return customerCommand;
         }
 
         private OleDbCommand PrepareBillCommand(BillHeader b)
         {
 
-            string queryInsertIntoBill = "Insert into Bills(BillDate,BillAmount,FormatGUID,AccountBalance,DueDate,ServiceAddress,FirstEmailDate,SecondEmailDate,CustomerID) VALUES(?,?,?,?,?,?,?,?,?)";
+            string queryInsertIntoBill = "Insert into Bills(BillDate,BillNumber,BillAmount,FormatGUID,AccountBalance,DueDate,ServiceAddress,FirstEmailDate,SecondEmailDate,CustomerID) VALUES(?,?,?,?,?,?,?,?,?,?)";
             
                 OleDbCommand billCommand = new OleDbCommand(queryInsertIntoBill, con);
 
                 billCommand.Parameters.AddWithValue("@BillDate", b.Bill_Dt);
-                billCommand.Parameters.AddWithValue("@BillAmount", b.Class_BillInfo.Bill_Amount);
+            billCommand.Parameters.AddWithValue("@BillNumber", b.Invoice_No);
+            billCommand.Parameters.AddWithValue("@BillAmount", b.Class_BillInfo.Bill_Amount);
                 billCommand.Parameters.AddWithValue("@FormatGUID", b.Class_BillInfo.FormatGUID);
                 billCommand.Parameters.AddWithValue("@AccountBalance", b.Class_BillInfo.Balance_Due);
                 billCommand.Parameters.AddWithValue("@DueDate", b.Due_Dt);

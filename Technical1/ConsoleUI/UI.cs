@@ -18,6 +18,7 @@ namespace Technical1.ConsoleUI
         private BillHeader _bh = new BillHeader();
         private MessageUI ui = new MessageUI();
         private Db _db = new Db();
+
         #region Main Functionality
 
         public void MainLoop()
@@ -69,7 +70,6 @@ namespace Technical1.ConsoleUI
 
             string filePath = string.Empty;
             string outputDir = string.Empty;
-            string errorMessage = string.Empty;
             string successMessage = string.Empty;
 
             ui.ConsoleMessage(MessageType.CallToAction,"Choose a XML file to parse");

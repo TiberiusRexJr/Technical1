@@ -80,7 +80,7 @@ namespace Technical1.FileOps
                 return status;    
             }
 
-            string filePathComplete = writeToDir + "/" + this.RPT_FILENAME + "-" + DateTime.Today.ToString("mmddyyyy") + ".rpt";
+            string filePathComplete = writeToDir + "/" + this.RPT_FILENAME + "-" + DateTime.Today.ToString("mm/dd/yyyy") + ".rpt";
             
             
             try
