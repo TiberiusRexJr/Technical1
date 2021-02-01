@@ -9,7 +9,10 @@ namespace Technical1.Model
 {
     class BillHeader
     {
-
+        #region Constatns
+        public readonly string INVOICE_FORMAT="xml";
+        public readonly string SERVICE_ADDRESS = "1655 Ruben M Torres Blvd STE 101, Brownsville, TX 78526";
+        #endregion
 
         #region Properties
         public string Invoice_No { get; set; }
@@ -21,8 +24,6 @@ namespace Technical1.Model
         public string Account_Class { get; set; }
         public Bill Class_BillInfo { get; set; }
         public AddressInformation Class_AddressInformation { get; set; }
-        public string InvoiceFormat{get;set;}
-        public string SERVICE_ADDRESS { get; set; }
 
         #endregion
 
@@ -33,6 +34,12 @@ namespace Technical1.Model
 
         #region DataTable Properties
         public DateTime DateAdded { get; set; }
+        #endregion
+
+        #region ForRPT
+        public string Service_Address { get; set; }
+        public string InvoiceFormat{get;set;}
+        public string Customer_GUID { get; set; }
         #endregion
 
         #region Constructor

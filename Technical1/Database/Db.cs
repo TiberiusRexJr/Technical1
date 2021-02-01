@@ -17,6 +17,7 @@ namespace Technical1.Database
         #region Properties
 
         #endregion
+
         #region Constructor
         public Db()
         {

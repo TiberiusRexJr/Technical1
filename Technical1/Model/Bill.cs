@@ -31,6 +31,7 @@ namespace Technical1.Model
         public int ID { get; set; }
         public string BillNumber { get; set; }
         public DateTime DateAdded { get; set; }
+        public string ServiceAddress { get; set; }
 
         #endregion
 

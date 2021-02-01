@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Xml;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace Technical1.ConsoleUI
     {
         private Parsing _parse = new Parsing();
         private Io _io = new Io();
+        private FileOpsUtil _ut = new FileOpsUtil();
         private BillHeader _bh = new BillHeader();
         private MessageUI ui = new MessageUI();
         private Db _db = new Db();
@@ -68,16 +70,16 @@ namespace Technical1.ConsoleUI
         public void XML_To_RPT()
         {
 
-            string filePath = string.Empty;
             string outputDir = string.Empty;
             string successMessage = string.Empty;
 
             ui.ConsoleMessage(MessageType.CallToAction,"Choose a XML file to parse");
 
-            filePath = GetFile(FilterFileExt.xml);
+            (string FilePath,string FileFormat) fileData = GetFileAndFormat(FilterFileExt.xml);
+            
             outputDir = GetOutputDir();
 
-            if(filePath==null||outputDir==null)
+            if(fileData.FilePath==null||outputDir==null)
             {
                 
                 ui.ConsoleMessage(MessageType.Failure, "Please select a valid File and Output directory and Try Again");
@@ -86,7 +88,7 @@ namespace Technical1.ConsoleUI
             }
            
 
-            XmlNodeList nodes = _io.GetXMLData(filePath, _bh.NodeName);
+            XmlNodeList nodes = _io.GetXMLData(fileData.FilePath,_bh.NodeName);
 
             if (nodes != null)
             {
@@ -94,13 +96,15 @@ namespace Technical1.ConsoleUI
 
                 if (billHeadersList != null)
                 {
-                    var writeData = _io.CreateWriteDataRPT(billHeadersList);
+                    var rawData = _ut.FillInExtraData(billHeadersList, fileData.FileFormat);
+
+                    var writeData = _io.CreateWriteDataRPT(rawData);
                     
                     if(writeData.Header!=null||writeData.WriteData!=null)
                     {
 
                         MessageType messengeType = default;
-                       bool successStatus= _io.WriteToRPT(filePath, writeData.Header, writeData.WriteData);
+                       bool successStatus= _io.WriteToRPT(fileData.FilePath,writeData.Header, writeData.WriteData);
                         if(successStatus)
                         {
                             successMessage = "Operation Completed Successfully!";
@@ -237,9 +241,10 @@ namespace Technical1.ConsoleUI
             return outputDir;
         }
 
-        public string GetFile(FilterFileExt filter)
+        public (string FilePath,string FileFormat) GetFileAndFormat(FilterFileExt filter)
         {
-            string filePath = string.Empty;
+            string FilePath = string.Empty;
+            string FileFormat = string.Empty;
 
             OpenFileDialog fdb = new OpenFileDialog();
 
@@ -249,12 +254,12 @@ namespace Technical1.ConsoleUI
 
             if (fdb.ShowDialog() == DialogResult.OK)
             {
-                filePath = fdb.FileName;
-
+                FilePath = fdb.FileName;
+                FileFormat = Path.GetExtension(fdb.FileName);
 
             };
 
-            if (string.IsNullOrEmpty(filePath))
+            if (string.IsNullOrEmpty(FilePath))
             {
 
                 ui.ConsoleMessage(MessageType.Failure, "Please select a valid File and Try Again");
@@ -262,7 +267,7 @@ namespace Technical1.ConsoleUI
                 MainLoop();
             }
 
-            return filePath;
+            return (FilePath, FileFormat);
         }
 
         #endregion

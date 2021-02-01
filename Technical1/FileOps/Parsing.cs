@@ -50,7 +50,7 @@ namespace Technical1.FileOps
                 b.Customer_Name = node[nameof(b.Customer_Name)].InnerText;
                 b.Bill_Dt = DateTime.ParseExact(node[nameof(b.Bill_Dt)].InnerText, "MM/DD/YYYY", null);
                 b.Due_Dt = DateTime.ParseExact(node[nameof(b.Due_Dt)].InnerText, "MM/DD/YYYY", null);
-
+    
                 #endregion
 
                 #region Node Bill Data
@@ -224,7 +224,7 @@ namespace Technical1.FileOps
             bill.Class_BillInfo.SecondEmailDate= DateTime.ParseExact(valuedData[17], "MM/DD/YYYY", null);
             bill.Class_BillInfo.Balance_Due = Convert.ToDecimal(valuedData[18]);
             bill.DateAdded= DateTime.ParseExact(valuedData[19], "MM/DD/YYYY", null);
-            bill.SERVICE_ADDRESS = valuedData[20];
+            bill.Service_Address = valuedData[20];
 
             #endregion
 

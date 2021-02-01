@@ -50,6 +50,7 @@
     <Compile Include="ConsoleUI\MessengerUI.cs" />
     <Compile Include="ConsoleUI\UI.cs" />
     <Compile Include="Database\Db.cs" />
+    <Compile Include="FileOps\FileOpsUtil.cs" />
     <Compile Include="Model\InvoiceBill.cs" />
     <Compile Include="FileOps\Io.cs" />
     <Compile Include="FileOps\Parsing.cs" />

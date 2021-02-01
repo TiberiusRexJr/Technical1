@@ -17,6 +17,7 @@ namespace Technical1.FileOps
 
         private readonly string  RPT_FILENAME = "BillFile";
         private readonly string CSV_FILENAME = "BillingReport";
+        
 
         #endregion
 
@@ -250,11 +251,14 @@ namespace Technical1.FileOps
 
             DateTime dateTime = new DateTime();
 
+
             string Current_Date = DateTime.Today.ToString("MM/dd/yyyy");
 
             string First_Notification_Date = dateTime.AddDays(5).ToString("MM/dd/yyyy");
 
             string Second_Notifaction_Date = header.Due_Dt.AddDays(-3).ToString("MM/dd/yyyy");
+
+            header.SERVICE_ADDRESS = this.SERVICE_ADDRESS;
 
             line += _FieldTable["JJ"] + "~" + header.InvoiceFormat + "|";
             line += header.Invoice_No + "|";
