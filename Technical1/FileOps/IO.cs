@@ -194,19 +194,9 @@ namespace Technical1.FileOps
         {
             string line = string.Empty;
 
+            var data = GetHeaderStatistics(billList);
 
-            string Current_Date = DateTime.Today.ToString("MM/dd/yyyy");
-
-            int invoiceRecordCount = billList.Count;
-            decimal invoiceRecordTotalAmount = default;
-
-            foreach (BillHeader b in billList)
-            {
-                invoiceRecordTotalAmount += b.Class_BillInfo.Bill_Amount;
-            }
-
-            line = _FieldTable["2"] + "," + Current_Date + "," + invoiceRecordCount + "," + invoiceRecordTotalAmount;
-
+            line = _FieldTable["2"] + "," + data.CurrentDate + "," + data.RecordCount.ToString() + "," + data.RecordInvoiceTotal.ToString();
 
             return line;
         }
@@ -264,24 +254,34 @@ namespace Technical1.FileOps
         {
             string line = string.Empty;
 
-            
-            string Current_Date = DateTime.Today.ToString("MM/dd/yyyy");
-
-            int invoiceRecordCount = billList.Count;
-            decimal invoiceRecordTotalAmount = default;
-
-            foreach (BillHeader b in billList)
-            {
-                invoiceRecordTotalAmount += b.Class_BillInfo.Bill_Amount;
-            }
-            line = _FieldTable["2"] + "|" + Current_Date + "|" + invoiceRecordCount + "|" + invoiceRecordTotalAmount + "";
+            var data=GetHeaderStatistics(billList);
+           
+            line = _FieldTable["2"] + "|" + data.CurrentDate + "|" + data.RecordCount.ToString() + "|" + data.RecordInvoiceTotal.ToString() + "";
 
             return line;
         }
 
         #endregion
 
+        #region Statistics
+          (int RecordCount,decimal RecordInvoiceTotal,string CurrentDate)  GetHeaderStatistics(List<BillHeader> billList)
+        {
+
+            string CurrentDate = DateTime.Today.ToString("mm/dd/yyyy");
+
+            int RecordCount = billList.Count;
+
+            decimal RecordInvoiceTotal = default;
+
+            foreach (BillHeader b in billList)
+            {
+                RecordInvoiceTotal += b.Class_BillInfo.Bill_Amount;
+            }
+            return (RecordCount,RecordInvoiceTotal, CurrentDate);
+        }
         #endregion
+
+#endregion
 
     }
 
