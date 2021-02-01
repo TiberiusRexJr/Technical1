@@ -45,6 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleUI\FilterFileExt.cs" />
+    <Compile Include="ConsoleUI\MessageType.cs" />
+    <Compile Include="ConsoleUI\MessengerUI.cs" />
     <Compile Include="ConsoleUI\UI.cs" />
     <Compile Include="Database\Db.cs" />
     <Compile Include="Model\InvoiceBill.cs" />

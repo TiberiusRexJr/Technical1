@@ -17,14 +17,7 @@ namespace Technical1
         [STAThread]
         static void Main(string[] args=null)
         {
-             string dbFile = "Billing.mdb";
-            var _ = AppDomain.CurrentDomain.BaseDirectory;
-            string newstring = _.Replace(@"\bin\Debug\", "/App_Data/" + dbFile);
-
-
-
-            Console.WriteLine(newstring);
-            Console.ReadLine();
+             
 
             UI _ui = new UI();
              _ui.MainLoop();

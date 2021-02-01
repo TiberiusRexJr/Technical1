@@ -15,9 +15,6 @@ namespace Technical1.FileOps
 
         #endregion
 
-        #region PuesdoEnumerations
-
-        #endregion
 
         #region Properties
 
@@ -31,7 +28,7 @@ namespace Technical1.FileOps
         #endregion
 
         #region Parse
-        public List<BillHeader> ParseXML(XmlNodeList nodeList)
+        public List<BillHeader> ParseXMLData(XmlNodeList nodeList)
         {
 
             List<BillHeader> invoiceRecords = new List<BillHeader>();

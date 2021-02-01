@@ -15,49 +15,43 @@ namespace Technical1.ConsoleUI
         private Parsing _parse = new Parsing();
         private Io _io = new Io();
         private BillHeader _bh = new BillHeader();
+        private MessageUI ui = new MessageUI();
+
+        #region Main Functionality
 
         public void MainLoop()
         {
-            UI ui = new UI();
+            
             Console.WriteLine("Choose an option from the following list:");
             Console.WriteLine("1. Parse a .XML File to .RPT File");
             Console.WriteLine("2. Save the contents of a .RPT File to the Database");
             Console.WriteLine("3. Export the Contents of the Databse to a CSV File");
             Console.WriteLine("4. Quit The Program");
 
-            Console.WriteLine(Environment.NewLine);
+            ui.ConsoleMessage(MessageType.CallToAction, "Enter a Number Now");
 
-            Console.ForegroundColor = ConsoleColor.Blue;
-
-            Console.WriteLine("Enter a Number Now..");
-            Console.ForegroundColor = ConsoleColor.White;
 
             string input = Console.ReadLine();
+
             int choice = default;
 
             if (!Int32.TryParse(input, out choice))
             {
-                Console.WriteLine(Environment.NewLine);
-
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Make a Valid Selection Dude");
-                Console.WriteLine(Environment.NewLine);
-                Console.ForegroundColor = ConsoleColor.White;
-
-
+                ui.ConsoleMessage(MessageType.Failure, "Make a Valid Selection");
                 MainLoop();
             }
+
             // Use a switch statement to do the math.
             switch (choice)
             {
                 case 1:
-                    ui.XML_To_RPT();
+                    XML_To_RPT();
                     break;
                 case 2:
-                    ui.XML_To_DB();
+                    XML_To_DB();
                     break;
                 case 3:
-                    ui.CSV_From_DB();
+                    CSV_From_DB();
                     break;
                 case 4:
                     Environment.Exit(1);
@@ -69,26 +63,23 @@ namespace Technical1.ConsoleUI
             // Wait for the user to respond before closing.
 
         }
-
-        #region Main Functionality
         public void XML_To_RPT()
         {
 
             string filePath = string.Empty;
             string outputDir = string.Empty;
+            string errorMessage = string.Empty;
+            string successMessage = string.Empty;
 
-            string StatusMessage = "Failure";
+            ui.ConsoleMessage(MessageType.CallToAction,"Choose a XML file to parse");
 
-            string _ = "Choose a XML file to parse";
-            Messenger(MessengeType.CallToAction,_);
-
-            filePath = GetFile();
+            filePath = GetFile(FilterFileExt.xml);
             outputDir = GetOutputDir();
 
             if(filePath==null||outputDir==null)
             {
-                string msg = "Please select a valid File and Output directory";
-                Messenger(MessengeType.Failure, msg);
+                
+                ui.ConsoleMessage(MessageType.Failure, "Please select a valid File and Output directory and Try Again");
 
                 MainLoop();
             }
@@ -98,7 +89,7 @@ namespace Technical1.ConsoleUI
 
             if (nodes != null)
             {
-                List<BillHeader> billHeadersList = _parse.ParseXML(nodes);
+                List<BillHeader> billHeadersList = _parse.ParseXMLData(nodes);
 
                 if (billHeadersList != null)
                 {
@@ -107,30 +98,50 @@ namespace Technical1.ConsoleUI
                     if(writeData.Header!=null||writeData.WriteData!=null)
                     {
 
+                        MessageType messengeType = default;
+                       bool successStatus= _io.WriteToRPT(filePath, writeData.Header, writeData.WriteData);
+                        if(successStatus)
+                        {
+                            successMessage = "Operation Completed Successfully!";
+                            messengeType = MessageType.Success;
+                            MainLoop();
+                        }
+                        else
+                        {
+                            successMessage = "Operation Failed!";
+                            messengeType = MessageType.Failure;
+                            MainLoop();
+                        }
+                        ui.ConsoleMessage(messengeType, successMessage);
                     }
+
+                }
+                else
+                {
+                    
+                    ui.ConsoleMessage(MessageType.Failure, "Failed! to get Data to WRite to file");
+                    MainLoop();
+
                 }
 
             }
+            else
+            {
+               
+                ui.ConsoleMessage(MessageType.Failure, "Failed! to get Node DAta from XML File");
+                MainLoop();
 
-
-
-            StatusMessage = "Success";
-
-
-            Console.WriteLine(Environment.NewLine);
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine(StatusMessage);
-            Console.WriteLine(Environment.NewLine);
-            Console.ResetColor();
-
-            MainLoop();
+            }
 
         }
 
         public void XML_To_DB()
         {
             string outputDirectory = string.Empty;
-            string StatusMessage = string.Empty;
+           
+
+            ui.ConsoleMessage(MessageType.CallToAction, "Choose A Folder to Save the File Too");
+            ui.ConsolePause();
 
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             fbd.Description = "Choose a Output Location";
@@ -139,21 +150,26 @@ namespace Technical1.ConsoleUI
             if (fbd.ShowDialog() == DialogResult.OK)
             {
                 outputDirectory = fbd.SelectedPath;
-                Console.WriteLine(outputDirectory);
-                Console.ReadLine();
+                if(string.IsNullOrEmpty(outputDirectory))
+                {
 
+                ui.ConsoleMessage(MessageType.Status, "Directory Accepted");
+                }
+                else
+                {
+                    ui.ConsoleMessage(MessageType.Failure, "Directory Not Selected!");
+                    MainLoop();
+                }
 
-                StatusMessage = "Success";
 
             }
+            else
+            {
+                ui.ConsoleMessage(MessageType.Failure, "Failed to Select a Output Directy, Try again Please");
+                MainLoop();
+            }
 
-            Console.WriteLine(Environment.NewLine);
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine(StatusMessage);
-            Console.WriteLine(Environment.NewLine);
-            Console.ResetColor();
-
-            MainLoop();
+            _parse.ParseRPT(outputDirectory);
         }
 
         public void CSV_From_DB()
@@ -202,16 +218,24 @@ namespace Technical1.ConsoleUI
                 outputDir = fbd.SelectedPath;
             }
 
+            if (string.IsNullOrEmpty(outputDir))
+            {
+
+                ui.ConsoleMessage(MessageType.Failure, "Please select a valid Directory and Try Again");
+
+                MainLoop();
+            }
+
             return outputDir;
         }
 
-        public string GetFile()
+        public string GetFile(FilterFileExt filter)
         {
             string filePath = string.Empty;
 
             OpenFileDialog fdb = new OpenFileDialog();
 
-            fdb.Filter = "xml files (*.xml)|*.xml";
+            fdb.Filter = filter.Value;
             fdb.FilterIndex = 1;
             fdb.Multiselect = false;
 
@@ -222,50 +246,21 @@ namespace Technical1.ConsoleUI
 
             };
 
+            if (string.IsNullOrEmpty(filePath))
+            {
+
+                ui.ConsoleMessage(MessageType.Failure, "Please select a valid File and Try Again");
+
+                MainLoop();
+            }
+
             return filePath;
         }
 
         #endregion
 
-        #region Messenger
-        public void Messenger(MessengeType messengeType,string message)
-        {
-            switch(messengeType.Value)
-            {
-                case "Success": Console.ForegroundColor = ConsoleColor.Green;
-                    break;
-                case "Failure":
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    break;
-                case "CallToAction":
-                    Console.ForegroundColor = ConsoleColor.Blue;
-                    break;
-            }
-            Console.WriteLine(Environment.NewLine);
-            Console.WriteLine(message);
-            Console.WriteLine(Environment.NewLine);
-            Console.ResetColor();
+        
 
-        }
-        #endregion
-
-        #region Messenger Enumeration Class
-        public class MessengeType
-        {
-            #region Constructor
-            private MessengeType(string value) { Value = value; }
-            #endregion
-            #region Variables
-            public string Value { get; set; }
-            #endregion
-
-            #region Properties
-            public static MessengeType Success { get { return new MessengeType("Success"); } }
-            public static MessengeType Failure { get { return new MessengeType("Failure"); } }
-            public static MessengeType CallToAction { get { return new MessengeType("CallToAction"); } }
-
-            #endregion
-        }
-        #endregion
+        
     }
 }
