@@ -9,11 +9,11 @@ namespace Technical1.FileOps
 {
     class FileOpsUtil
     {
-        public List<BillHeader> FillInExtraData(List<BillHeader> dataList,string fileFormat=" ")
+        public List<BillHeader> FillInExtraData(List<BillHeader> dataList)
         {
             foreach(BillHeader b in dataList)
             {
-                b.InvoiceFormat = fileFormat;
+               
                 b.Service_Address = b.SERVICE_ADDRESS;
                 Guid guid = new Guid();
                 b.Customer_GUID = guid.ToString();

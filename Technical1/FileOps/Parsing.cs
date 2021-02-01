@@ -94,7 +94,7 @@ namespace Technical1.FileOps
                 string header=reader.ReadLine();
 
                 //---->if does not contain("1~FR") aka header, return empty
-                if(header.IndexOf("1~FR",0)==-1)
+                if(string.IsNullOrEmpty(header))
                 {
                     return dataList;
                 }
@@ -173,35 +173,35 @@ namespace Technical1.FileOps
                 }
             }
 
-            string filterChar = "~";
             #endregion
 
-            #region FilterData
-            //Filter and Remove UnFilled Key Values,e.g VV~,CC~
+            //#region FilterData
+            //string filterChar = "~";
+            ////Filter and Remove UnFilled Key Values,e.g VV~,CC~
 
-            for (int i=0; i<=valuedData.Count; i++)
-            {
-                //Find First Instance of "~"
-                int breakpoint = valuedData[i].IndexOf(filterChar, StringComparison.Ordinal);
+            //for (int i=0; i<=valuedData.Count; i++)
+            //{
+            //    //Find First Instance of "~"
+            //    int breakpoint = valuedData[i].IndexOf(filterChar, StringComparison.Ordinal);
 
-                string filteredString = string.Empty;
+            //    string filteredString = string.Empty;
 
-                //Get string up until "~"
-                string key = valuedData[i].Substring(0, breakpoint);
+            //    //Get string up until "~"
+            //    string key = valuedData[i].Substring(0, breakpoint);
 
-                //If key's length is not greater then 3, it is a UnFilled Key (VV~,CC~) and will be removed
-                if (!(key.Length > 3))
-                {
-                    //Get the String Data Past the "~", ignoring e.g vv~,CC~,~AA
-                    filteredString = valuedData[i].Substring(breakpoint);
-                }
-                //any other case, the data before the "~" is greater then 3 thus it has been filled in,
-                //copy the whole string.
-                valuedData[i] = valuedData[i];
-                //stick it in a container now.
-            }
+            //    //If key's length is not greater then 3, it is a UnFilled Key (VV~,CC~) and will be removed
+            //    if (!(key.Length > 3))
+            //    {
+            //        //Get the String Data Past the "~", ignoring e.g vv~,CC~,~AA
+            //        filteredString = valuedData[i].Substring(breakpoint);
+            //    }
+            //    //any other case, the data before the "~" is greater then 3 thus it has been filled in,
+            //    //copy the whole string.
+            //    valuedData[i] = valuedData[i];
+            //    //stick it in a container now.
+            //}
 
-            #endregion
+            //#endregion
 
             #region CreateReturnData
 

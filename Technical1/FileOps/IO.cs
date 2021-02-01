@@ -163,7 +163,7 @@ namespace Technical1.FileOps
             {
                 invoiceRecordTotalAmount += b.Class_BillInfo.Bill_Amount;
             }
-            line = "1~FR|"+ _FieldTable["2"] + "~"+ Client_GUID + "|3~Sample UT file|4~"+ Current_Date +"|~"+ invoiceRecordCount + "|~"+invoiceRecordTotalAmount+"";
+            line = _FieldTable["2"] + "|"+ Current_Date +"|"+ invoiceRecordCount + "|"+invoiceRecordTotalAmount+"";
 
             return line;
         }
@@ -231,7 +231,7 @@ namespace Technical1.FileOps
             
             string line = string.Empty;
 
-            line = "AA~CT|BB~"+header.Account_No+"|VV~"+header.Customer_Name+"|CC~"+ header.Class_AddressInformation.Mailing_Address_1 + "|DD~"+ header.Class_AddressInformation.Mailing_Address_2 + "|EE~"+ header.Class_AddressInformation.City + "|FF~"+ header.Class_AddressInformation.State + "|GG~"+ header.Class_AddressInformation.Zip + "";
+            line = header.Account_No+"|"+header.Customer_Name+"|"+ header.Class_AddressInformation.Mailing_Address_1 + "|"+ header.Class_AddressInformation.Mailing_Address_2 + "|"+ header.Class_AddressInformation.City + "|"+ header.Class_AddressInformation.State + "|"+ header.Class_AddressInformation.Zip + "";
 
             return line;
         }
@@ -249,7 +249,7 @@ namespace Technical1.FileOps
 
             string Second_Notifaction_Date = header.Due_Dt.AddDays(-3).ToString("MM/dd/yyyy");
 
-            line = "HH~IH|II~R|"+_FieldTable["2"]+"~"+header.InvoiceFormat+"|KK~"+header.Invoice_No+"|LL~"+header.Bill_Dt.ToString("mm/dd/yyyy")+"|MM~"+header.Due_Dt.ToString("mm/dd/yyyy")+"|NN~"+header.Class_BillInfo.Bill_Amount+"|OO~"+First_Notification_Date+"|PP~"+Second_Notifaction_Date+"|QQ~"+header.Class_BillInfo.Balance_Due+"|RR~"+Current_Date+"|SS~"+header.Service_Address+"";
+            line = _FieldTable["JJ"]+"|"+header.Invoice_No+"|"+header.Bill_Dt.ToString("mm/dd/yyyy")+"|"+header.Due_Dt.ToString("mm/dd/yyyy")+"|"+header.Class_BillInfo.Bill_Amount+"|"+First_Notification_Date+"|"+Second_Notifaction_Date+"|"+header.Class_BillInfo.Balance_Due+"|"+Current_Date+"|"+header.Service_Address+"";
 
 
             return line;

@@ -96,7 +96,7 @@ namespace Technical1.ConsoleUI
 
                 if (billHeadersList != null)
                 {
-                    var rawData = _ut.FillInExtraData(billHeadersList, fileData.FileFormat);
+                    var rawData = _ut.FillInExtraData(billHeadersList);
 
                     var writeData = _io.CreateWriteDataRPT(rawData);
                     
