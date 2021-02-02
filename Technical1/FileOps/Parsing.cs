@@ -113,41 +113,51 @@ namespace Technical1.FileOps
                 return dataList;
             }
 
-            using (StreamReader reader = new StreamReader(filePath))
+            try
             {
-
-                string header=reader.ReadLine();
-
-                //---->if does not contain("1~FR") aka header, return empty
-                if(string.IsNullOrEmpty(header))
+                using (StreamReader reader = new StreamReader(filePath))
                 {
-                    return dataList;
-                }
 
-                string line = string.Empty;
+                    string header = reader.ReadLine();
 
-                //every string objeect in "rowData" is a Line Read from the file
-                List<string> rowData = new List<string>();
-
-                while((line=reader.ReadLine())!=null)
-                {
-                    rowData.Add(line);
-
-                    //When there are 2 items (AA,HH) in RowData Send off the pair to the helper function for data extraction
-                    if(rowData.Count==2)
+                    //---->if does not contain("1~FR") aka header, return empty
+                    if (string.IsNullOrEmpty(header))
                     {
-                       BillHeader b= ParseRPTHelper(rowData);
-                        if(b!=null)
-                        {
+                        return dataList;
+                    }
 
-                            dataList.Add(b);
+                    string line = string.Empty;
+
+                    //every string objeect in "rowData" is a Line Read from the file
+                    List<string> rowData = new List<string>();
+
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        rowData.Add(line);
+
+                        //When there are 2 items (AA,HH) in RowData Send off the pair to the helper function for data extraction
+                        if (rowData.Count == 2)
+                        {
+                            BillHeader b = ParseRPTHelper(rowData);
+                            if (b != null)
+                            {
+
+                                dataList.Add(b);
+                            }
+
+                            rowData.Clear();
                         }
 
-                        rowData.Clear();
                     }
 
                 }
-
+            }
+            catch(Exception e)
+            {
+                if(e is IOException)
+                {
+                    return dataList = default;
+                }
             }
 
                 return dataList;
@@ -185,8 +195,15 @@ namespace Technical1.FileOps
 
                         valuedData.Add(valuedStringData);
 
-                        //re-asign the StringLine, "cutting out"  "|" Character just encountered
-                        stringLine = stringLine.Substring(breakPoint + 1);
+                        if (string.Equals(StopAt, stringLine[breakPoint + 1].ToString()))
+                        {
+                            stringLine = stringLine.Substring(breakPoint + 2);
+                            valuedData.Add(string.Empty);
+                        }
+                        else
+                        {
+                            stringLine = stringLine.Substring(breakPoint + 1);
+                        }
                     }
                     //case -1, "|" not found, End of Line
                     else
@@ -231,25 +248,25 @@ namespace Technical1.FileOps
             #region CreateReturnData
 
             //AA line data
-            bill.Account_No = valuedData[1];
-            bill.Customer_Name = valuedData[2];
-           bill.Class_AddressInformation.Mailing_Address_1 = valuedData[3];
-            bill.Class_AddressInformation.Mailing_Address_2 = valuedData[4];
-            bill.Class_AddressInformation.City = valuedData[5];
-            bill.Class_AddressInformation.State=valuedData[6];
-            bill.Class_AddressInformation.Zip = valuedData[7];
+            bill.Account_No = valuedData[0];
+            bill.Customer_Name = valuedData[1];
+           bill.Class_AddressInformation.Mailing_Address_1 = valuedData[2];
+            bill.Class_AddressInformation.Mailing_Address_2 = valuedData[3];
+            bill.Class_AddressInformation.City = valuedData[4];
+            bill.Class_AddressInformation.State=valuedData[5];
+            bill.Class_AddressInformation.Zip = valuedData[6];
 
             //HH line data
-            bill.FormatGUID = valuedData[11];
-            bill.Invoice_No = valuedData[12];
-            bill.Bill_Dt = DateTime.ParseExact(valuedData[13], "MM/DD/YYYY", null);
-            bill.Due_Dt= DateTime.ParseExact(valuedData[14], "MM/DD/YYYY", null);
-            bill.Class_BillInfo.Bill_Amount = Convert.ToDecimal(valuedData[15]);
-            bill.Class_BillInfo.FirstEmailDate= DateTime.ParseExact(valuedData[16], "MM/DD/YYYY", null);
-            bill.Class_BillInfo.SecondEmailDate= DateTime.ParseExact(valuedData[17], "MM/DD/YYYY", null);
-            bill.Class_BillInfo.Balance_Due = Convert.ToDecimal(valuedData[18]);
-            bill.DateAdded= DateTime.ParseExact(valuedData[19], "MM/DD/YYYY", null);
-            bill.Service_Address = valuedData[20];
+            bill.FormatGUID = valuedData[7];
+            bill.Invoice_No = valuedData[8];
+            bill.Bill_Dt = DateTime.ParseExact(valuedData[9], "MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+            bill.Due_Dt = DateTime.ParseExact(valuedData[10], "MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+            bill.Class_BillInfo.Bill_Amount = Convert.ToDecimal(valuedData[11]);
+            bill.Class_BillInfo.FirstEmailDate = DateTime.ParseExact(valuedData[12], "MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+            bill.Class_BillInfo.SecondEmailDate = DateTime.ParseExact(valuedData[13], "MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+            bill.Class_BillInfo.Balance_Due = Convert.ToDecimal(valuedData[14]);
+            bill.DateAdded = DateTime.ParseExact(valuedData[15], "MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+            bill.Service_Address = valuedData[16];
 
             #endregion
 

@@ -36,7 +36,17 @@ namespace Technical1.Database
             builder.DataSource = dbRoot + dbFile;
             builder.PersistSecurityInfo = true;
 
-            con = new OleDbConnection(builder.ConnectionString);
+            try
+            {
+                con = new OleDbConnection(builder.ConnectionString);
+            }
+            catch(Exception e)
+            {
+                if(e is OleDbException)
+                {
+
+                }
+            }
         }
         
         public bool PutData(List<BillHeader> dataList)
@@ -83,9 +93,13 @@ namespace Technical1.Database
 
             }
 
-            catch (OleDbException e)
+            catch (Exception e)
             {
+                if(e is OleDbException)
+                {
+
                 return status;
+                }
             }
             finally
             {
@@ -153,10 +167,11 @@ namespace Technical1.Database
         private OleDbCommand PrepareCustomerCommand(BillHeader b)
         {
             string queryInsertIntoCustomer = "Insert into Customer(CustomerName,AccountNumber,CustomerAddress,CustomerCity,CustomerState,CustomerZip,DateAdded) VALUES(?,?,?,?,?,?,?)";
-
-                OleDbCommand customerCommand = new OleDbCommand(queryInsertIntoCustomer, con);
-
-            b.DateAdded = DateTime.Today;
+            OleDbCommand customerCommand = default;
+            try
+            {
+                customerCommand = new OleDbCommand(queryInsertIntoCustomer, con);
+                b.DateAdded = DateTime.Today;
 
                 customerCommand.Parameters.AddWithValue("@CustomerName", b.Customer_Name);
                 customerCommand.Parameters.AddWithValue("@AccountNumber", b.Account_No);
@@ -164,7 +179,17 @@ namespace Technical1.Database
                 customerCommand.Parameters.AddWithValue("@CustomerCity", b.Class_AddressInformation.City);
                 customerCommand.Parameters.AddWithValue("@CustomerState", b.Class_AddressInformation.State);
                 customerCommand.Parameters.AddWithValue("@CustomerZip", b.Class_AddressInformation.Zip);
-                customerCommand.Parameters.AddWithValue("@CustomerZip", b.DateAdded);
+                customerCommand.Parameters.AddWithValue("@DateAdded", b.DateAdded);
+            }
+            catch(Exception e)
+            {
+                if(e is OleDbException||e is OleDbException)
+                {
+
+                }
+            }
+
+            
 
 
             return customerCommand;
@@ -180,7 +205,7 @@ namespace Technical1.Database
                 billCommand.Parameters.AddWithValue("@BillDate", b.Bill_Dt);
             billCommand.Parameters.AddWithValue("@BillNumber", b.Invoice_No);
             billCommand.Parameters.AddWithValue("@BillAmount", b.Class_BillInfo.Bill_Amount);
-                billCommand.Parameters.AddWithValue("@FormatGUID", b.Class_BillInfo.FormatGUID);
+                billCommand.Parameters.AddWithValue("@FormatGUID", b.FormatGUID);
                 billCommand.Parameters.AddWithValue("@AccountBalance", b.Class_BillInfo.Balance_Due);
                 billCommand.Parameters.AddWithValue("@DueDate", b.Due_Dt);
                 billCommand.Parameters.AddWithValue("@ServiceAddress", b.SERVICE_ADDRESS);

@@ -52,7 +52,7 @@ namespace Technical1.ConsoleUI
                     XML_To_RPT();
                     break;
                 case 2:
-                    XML_To_DB();
+                    RPT_To_DB();
                     break;
                 case 3:
                     CSV_From_DB();
@@ -147,17 +147,17 @@ namespace Technical1.ConsoleUI
 
         public void RPT_To_DB()
         {
-            string outputDirectory = string.Empty;
+            string filePath = string.Empty;
             
 
             ui.ConsoleMessage(MessageType.CallToAction, "Choose A Folder to Save the File Too");
-            ui.ConsolePause();
 
-            outputDirectory = GetOutputDir();
 
-          List<BillHeader> parsedDataList=  _parse.ParseRPT(outputDirectory);
+            var fileData = GetFileAndFormat(FilterFileExt.rpt);
 
-            if(parsedDataList == null)
+          List<BillHeader> parsedDataList=  _parse.ParseRPT(fileData.FilePath);
+
+            if(parsedDataList == null||parsedDataList.Count==0)
             {
                 ui.ConsoleMessage(MessageType.Failure, "Failed to Parse the RPT File!");
                 MainLoop();
