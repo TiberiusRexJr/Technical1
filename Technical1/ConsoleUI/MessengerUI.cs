@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace Technical1.ConsoleUI
 {
+    /// <summary>
+    /// A Utility class meant to be used to give user feedback from the program to the user on the sonole
+    /// <remarks>
+    /// Rather then constantly having to call <example>Console.Writline()</example>. Simply provide a <typeparam>Messagetype</typeparam> static object and a custom text to the <c>ConsoleMessage</c> function and it will ake care of the rest.
+    /// </remarks>
+    /// </summary>
     class MessageUI
     {
         public MessageType MessageType { get; set; }

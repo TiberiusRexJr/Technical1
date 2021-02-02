@@ -48,7 +48,14 @@ namespace Technical1.Database
                 }
             }
         }
-        
+        /// <summary>
+        /// Accepts a list of <typeparam>BillHeader</typeparam> objects. The Function iterates through the provided paramter list and sends each object to both <c>PrepareCustomerCommand</c> and <c>PrepareBillCommand</c>. Which in turn 
+        /// return a ready to Execute Command that targets the Customer and Bill Table respectively and insertes the data nested within the provided <typeparam>BillHeader</typeparam> List. 
+        /// It returns a boolean value to indicate a successfull or failure execution.
+        /// </summary>
+        /// 
+        /// <param name="dataList"></param>
+        /// <returns><type>Bool</type></returns>
         public bool PutData(List<BillHeader> dataList)
         {
             bool status = false;
@@ -110,6 +117,11 @@ namespace Technical1.Database
 
         }
 
+        /// <summary>
+        /// uses a <type>Oledb</type> connection and a <type>OledbReader</type> instance to get the data from 
+        /// both the Customer and Bills Table via a union. It returns a populated <type>BillHeader</type> list or a null list to indicate a failure in the operation
+        /// </summary>
+        /// <returns>List<BillHeader></BillHeader></returns>
         public List<BillHeader> GetData()
         {
             List<BillHeader> returnData = new List<BillHeader>();
@@ -168,6 +180,12 @@ namespace Technical1.Database
             return returnData;
         }
 
+        /// <summary>
+        /// uses the data provided by the <type>BillHeader</type> object to create a command with paramters to insert
+        /// data into the Customer TAble
+        /// </summary>
+        /// <param name="b"></param>
+        /// <returns><type>OleDbCommand</type></returns>
         private OleDbCommand PrepareCustomerCommand(BillHeader b)
         {
             string queryInsertIntoCustomer = "Insert into Customer(CustomerName,AccountNumber,CustomerAddress,CustomerCity,CustomerState,CustomerZip,DateAdded) VALUES(?,?,?,?,?,?,?)";
@@ -198,7 +216,12 @@ namespace Technical1.Database
 
             return customerCommand;
         }
-
+        /// <summary>
+        /// uses the data provided by the <type>BillHeader</type> object to create a command
+        /// with paramters that will insert data into the Bills table
+        /// </summary>
+        /// <param name="b"></param>
+        /// <returns>OleDbCommand</returns>
         private OleDbCommand PrepareBillCommand(BillHeader b)
         {
 

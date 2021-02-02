@@ -23,6 +23,9 @@ namespace Technical1.ConsoleUI
 
         #region Main Functionality
 
+        /// <summary>
+        /// Main Entry Point for the Program. Gives the user Functionality choices.
+        /// </summary>
         public void MainLoop()
         {
             
@@ -67,6 +70,9 @@ namespace Technical1.ConsoleUI
             // Wait for the user to respond before closing.
 
         }
+        /// <summary>
+        /// Contains all the logic accross many classes and functions to Parse the xml file to a RPT file
+        /// </summary>
         public void XML_To_RPT()
         {
 
@@ -144,7 +150,9 @@ namespace Technical1.ConsoleUI
             }
 
         }
-
+        /// <summary>
+        /// Conatins all the logic to Parse a RPT File and save the Extracted Data in the Database
+        /// </summary>
         public void RPT_To_DB()
         {
             string filePath = string.Empty;
@@ -178,6 +186,9 @@ namespace Technical1.ConsoleUI
 
         }
 
+        /// <summary>
+        /// Conatins the logic to Create a CSV file from the data in the Billing database
+        /// </summary>
         public void CSV_From_DB()
         {
             string outputDirectory = string.Empty;
