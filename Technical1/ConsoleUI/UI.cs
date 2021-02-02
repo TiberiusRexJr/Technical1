@@ -73,10 +73,12 @@ namespace Technical1.ConsoleUI
             string outputDir = string.Empty;
             string successMessage = string.Empty;
 
+            
             ui.ConsoleMessage(MessageType.CallToAction,"Choose a XML file to parse");
 
             (string FilePath,string FileFormat) fileData = GetFileAndFormat(FilterFileExt.xml);
-            
+
+            ui.ConsoleMessage(MessageType.CallToAction, "Choose a Output Folder");
             outputDir = GetOutputDir();
 
             if(fileData.FilePath==null||outputDir==null)
@@ -105,20 +107,22 @@ namespace Technical1.ConsoleUI
                     {
 
                         MessageType messengeType = default;
-                       bool successStatus= _io.WriteToRPT(fileData.FilePath,writeData.Header, writeData.WriteData);
+                       bool successStatus= _io.WriteToRPT(outputDir,writeData.Header, writeData.WriteData);
                         if(successStatus)
                         {
                             successMessage = "Operation Completed Successfully!";
                             messengeType = MessageType.Success;
+                            ui.ConsoleMessage(messengeType, successMessage);
                             MainLoop();
                         }
                         else
                         {
                             successMessage = "Operation Failed!";
                             messengeType = MessageType.Failure;
+                            ui.ConsoleMessage(messengeType, successMessage);
                             MainLoop();
                         }
-                        ui.ConsoleMessage(messengeType, successMessage);
+                        
                     }
 
                 }
@@ -141,7 +145,7 @@ namespace Technical1.ConsoleUI
 
         }
 
-        public void XML_To_DB()
+        public void RPT_To_DB()
         {
             string outputDirectory = string.Empty;
             
@@ -224,11 +228,19 @@ namespace Technical1.ConsoleUI
 
             FolderBrowserDialog fbd = new FolderBrowserDialog();
             fbd.Description = "Select a File Destination";
+            fbd.RootFolder = Environment.SpecialFolder.Desktop;
 
-
-            if (fbd.ShowDialog() == DialogResult.OK)
+            try
             {
-                outputDir = fbd.SelectedPath;
+                if (fbd.ShowDialog(new Form() { TopMost = true }) == DialogResult.OK)
+                {
+                    outputDir = fbd.SelectedPath;
+                };
+                
+            }
+            catch(Exception e)
+            {
+                System.Console.WriteLine(e.Message);
             }
 
             if (string.IsNullOrEmpty(outputDir))
@@ -237,7 +249,7 @@ namespace Technical1.ConsoleUI
                 ui.ConsoleMessage(MessageType.Failure, "Please select a valid Directory and Try Again");
 
                 MainLoop();
-            }
+            };
 
             return outputDir;
         }
@@ -259,6 +271,7 @@ namespace Technical1.ConsoleUI
                 FileFormat = Path.GetExtension(fdb.FileName);
 
             };
+           
 
             if (string.IsNullOrEmpty(FilePath))
             {

@@ -41,9 +41,12 @@ namespace Technical1.Model
         public string Service_Address { get; set; }
         #endregion
 
-        
         #region Constructor
-
+        public BillHeader()
+        {
+            this.Class_BillInfo = new Bill();
+            this.Class_AddressInformation = new AddressInformation();
+        }
         #endregion
 
 

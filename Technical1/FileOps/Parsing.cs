@@ -39,35 +39,60 @@ namespace Technical1.FileOps
             }
 
 
-            foreach(XmlNode node in nodeList)
+            foreach (XmlNode node in nodeList)
             {
                 BillHeader b = new BillHeader();
 
                 #region Node Bill_Header DATA
 
-                b.Invoice_No = node[nameof(b.Invoice_No)].InnerText;
-                b.Account_No = node[nameof(b.Account_No)].InnerText;
-                b.Customer_Name = node[nameof(b.Customer_Name)].InnerText;
-                b.Bill_Dt = DateTime.ParseExact(node[nameof(b.Bill_Dt)].InnerText, "MM/DD/YYYY", null);
-                b.Due_Dt = DateTime.ParseExact(node[nameof(b.Due_Dt)].InnerText, "MM/DD/YYYY", null);
-    
+                b.Invoice_No = node["Invoice_No"].InnerText;
+                b.Account_No = node["Account_No"].InnerText;
+                b.Customer_Name = node["Customer_Name"].InnerText;
+
+                try
+                {
+                    b.Bill_Dt= DateTime.ParseExact(node["Bill_Dt"].InnerText, "MMM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                }
+                catch(Exception ex)
+                {
+                    if (ex is FormatException || ex is ArgumentNullException)
+                    {
+                        b.Bill_Dt = default;
+                    }
+                }
+
+                try
+                {
+                    b.Due_Dt = DateTime.ParseExact(node["Due_Dt"].InnerText, "MMM-dd-yyyy", System.Globalization.CultureInfo.InvariantCulture);
+                }
+                catch (Exception ex)
+                {
+                    if (ex is FormatException || ex is ArgumentNullException)
+                    {
+                        b.Bill_Dt = default;
+                    }
+                }
+
                 #endregion
 
                 #region Node Bill Data
-                b.Class_BillInfo.Bill_Amount = Convert.ToDecimal(node.SelectSingleNode("//" + nameof(b.Class_BillInfo.NodeName) + "/" + nameof(b.Class_BillInfo.Bill_Amount))?.InnerText);
-                b.Class_BillInfo.Balance_Due = Convert.ToDecimal(node.SelectSingleNode("//" + nameof(b.Class_BillInfo.NodeName) + "/" + nameof(b.Class_BillInfo.Balance_Due))?.InnerText);
-                b.Class_BillInfo.Bill_Run_Dt = DateTime.ParseExact((node.SelectSingleNode("//" + nameof(b.Class_BillInfo.NodeName) + "/" + nameof(b.Class_BillInfo.Balance_Due))?.InnerText),"MM/DD/YYYY",null);
-                b.Class_BillInfo.Bill_Run_Seq = Convert.ToInt32(node.SelectSingleNode("//" + nameof(b.Class_BillInfo.NodeName) + "/" + nameof(b.Class_BillInfo.Bill_Run_Seq))?.InnerText);
-                b.Class_BillInfo.Bill_Run_Tm= Convert.ToInt32(node.SelectSingleNode("//" + nameof(b.Class_BillInfo.NodeName) + "/" + nameof(b.Class_BillInfo.Bill_Run_Tm))?.InnerText);
-                b.Class_BillInfo.Bill_Tp =node.SelectSingleNode("//" + nameof(b.Class_BillInfo.NodeName) + "/" + nameof(b.Class_BillInfo.Bill_Tp))?.InnerText;
 
+                XmlNodeList billNodechildren = node["Bill"].ChildNodes;
+
+                b.Class_BillInfo.Bill_Amount = Convert.ToDecimal(billNodechildren.Item(0).InnerText);
+                b.Class_BillInfo.Balance_Due = Convert.ToDecimal(billNodechildren.Item(1).InnerText);
+              
                 #endregion
 
                 #region Node Address Data
-                b.Class_AddressInformation.Mailing_Address_1= node.SelectSingleNode("//" + nameof(b.Class_AddressInformation.NodeName) + "/" + nameof(b.Class_AddressInformation.Mailing_Address_1))?.InnerText;
-                b.Class_AddressInformation.Mailing_Address_2= node.SelectSingleNode("//" + nameof(b.Class_AddressInformation.NodeName) + "/" + nameof(b.Class_AddressInformation.Mailing_Address_2))?.InnerText;
-                b.Class_AddressInformation.City = node.SelectSingleNode("//" + nameof(b.Class_AddressInformation.NodeName) + "/" + nameof(b.Class_AddressInformation.City))?.InnerText;
-                b.Class_AddressInformation.Zip=node.SelectSingleNode("//" + nameof(b.Class_AddressInformation.NodeName) + "/" + nameof(b.Class_AddressInformation.Zip))?.InnerText;
+
+                XmlNodeList addressNodeChildren = node["Address_Information"].ChildNodes;
+
+                b.Class_AddressInformation.Mailing_Address_1= addressNodeChildren.Item(0).InnerText;
+                b.Class_AddressInformation.Mailing_Address_2=addressNodeChildren.Item(1).InnerText;
+                b.Class_AddressInformation.City =addressNodeChildren.Item(2).InnerText;
+                b.Class_AddressInformation.State = addressNodeChildren.Item(3).InnerText;
+                b.Class_AddressInformation.Zip=addressNodeChildren.Item(4).InnerText;
 
 
                 #endregion

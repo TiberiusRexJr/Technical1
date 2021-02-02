@@ -56,17 +56,14 @@ namespace Technical1.FileOps
             {
                 return Bill_Headers;
             }
+         
 
             
 
             return Bill_Headers;
 
         }
-        public void ReadRPT()
-        {
-
-
-        }
+        
 
         #endregion
 
@@ -81,7 +78,7 @@ namespace Technical1.FileOps
                 return status;    
             }
 
-            string filePathComplete = writeToDir + "/" + this.RPT_FILENAME + "-" + DateTime.Today.ToString("mm/dd/yyyy") + ".rpt";
+            string filePathComplete = writeToDir + "/" + this.RPT_FILENAME + "-" + DateTime.Today.ToString("mmddyyyy") + ".rpt";
             
             
             try
@@ -206,7 +203,7 @@ namespace Technical1.FileOps
         public (string Header, List<InvoiceBill>WriteData) CreateWriteDataRPT(List<BillHeader> billHeaders)
         {
             string Header = string.Empty;
-            List<InvoiceBill> WriteData = default;
+            List<InvoiceBill> WriteData = new List<InvoiceBill>();
 
             Header = CreateInvoiceHeaderRPT(billHeaders);
 
@@ -235,16 +232,16 @@ namespace Technical1.FileOps
         {
             string line = string.Empty;
 
-            DateTime dateTime = new DateTime();
+          
 
 
             string Current_Date = DateTime.Today.ToString("MM/dd/yyyy");
 
-            string First_Notification_Date = dateTime.AddDays(5).ToString("MM/dd/yyyy");
+            string First_Notification_Date = DateTime.Today.AddDays(5).ToString("MM/dd/yyyy");
 
             string Second_Notifaction_Date = header.Due_Dt.AddDays(-3).ToString("MM/dd/yyyy");
 
-            line = _FieldTable["JJ"]+"|"+header.Invoice_No+"|"+header.Bill_Dt.ToString("mm/dd/yyyy")+"|"+header.Due_Dt.ToString("mm/dd/yyyy")+"|"+header.Class_BillInfo.Bill_Amount+"|"+First_Notification_Date+"|"+Second_Notifaction_Date+"|"+header.Class_BillInfo.Balance_Due+"|"+Current_Date+"|"+header.Service_Address+"";
+            line = _FieldTable["JJ"]+"|"+header.Invoice_No+"|"+header.Bill_Dt.ToString("MM/dd/yyyy")+"|"+header.Due_Dt.ToString("MM/dd/yyyy")+"|"+header.Class_BillInfo.Bill_Amount+"|"+First_Notification_Date+"|"+Second_Notifaction_Date+"|"+header.Class_BillInfo.Balance_Due+"|"+Current_Date+"|"+header.Service_Address+"";
 
 
             return line;
@@ -267,7 +264,7 @@ namespace Technical1.FileOps
           (int RecordCount,decimal RecordInvoiceTotal,string CurrentDate)  GetHeaderStatistics(List<BillHeader> billList)
         {
 
-            string CurrentDate = DateTime.Today.ToString("mm/dd/yyyy");
+            string CurrentDate = DateTime.Today.ToString("MM/dd/yyyy");
 
             int RecordCount = billList.Count;
 
