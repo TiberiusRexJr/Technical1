@@ -115,7 +115,7 @@ namespace Technical1.Database
             List<BillHeader> returnData = new List<BillHeader>();
 
 
-            string getDataQuery = "SELECT c.CustomerId,c.CustomerName,c.AccountNumber,c.CustomerAddress,c.CustomerCity,c.CustomerState,c.CustomerZip,b.ID,b.BillDate,b.BillNumber,b.AccountBalance,b.DueDate,b.BillAmount,b.FormatGUID,c.DateAdded FROM Customer AS c INNER JOIN Bills as b ON c.ID=b.CustomerID";
+            string getDataQuery = "SELECT b.CustomerID,c.CustomerName,c.AccountNumber,c.CustomerAddress,c.CustomerCity,c.CustomerState,c.CustomerZip,b.ID,b.BillDate,b.BillNumber,b.AccountBalance,b.DueDate,b.BillAmount,b.FormatGUID,c.DateAdded FROM Customer AS c Inner JOIN Bills as b ON c.ID=b.CustomerID";
 
             OleDbCommand getDataCommand = new OleDbCommand(getDataQuery, con);
 
@@ -124,14 +124,14 @@ namespace Technical1.Database
                 con.Open();
                 OleDbDataReader reader = getDataCommand.ExecuteReader();
 
-                if(reader.HasRows)
+                while(reader.Read())
                 {
-                   
 
+                    
 
                     BillHeader b = new BillHeader();
 
-                    b.Class_BillInfo.CustomerID = Convert.ToInt32(reader["CustomerID"].ToString()) ;
+                    b.Class_BillInfo.CustomerID = Convert.ToInt32(reader["CustomerID"].ToString());
                     b.Customer_Name = reader["CustomerName"].ToString();
                     b.Account_No = reader["AccountNumber"].ToString();
                     b.Class_AddressInformation.Mailing_Address_1 = reader["CustomerAddress"].ToString();
@@ -139,21 +139,25 @@ namespace Technical1.Database
                     b.Class_AddressInformation.State = reader["CustomerState"].ToString();
                     b.Class_AddressInformation.Zip = reader["CustomerZip"].ToString();
                     b.Class_BillInfo.ID = Convert.ToInt32(reader["ID"].ToString());
-                    b.Class_BillInfo.Bill_Run_Dt = DateTime.ParseExact((reader["BillDate"].ToString()), "MM/DD/YYYY", null);
+                    b.Bill_Dt = Convert.ToDateTime(reader["BillDate"]);
                     b.Class_BillInfo.BillNumber = reader["BillNumber"].ToString();
                     b.Class_BillInfo.Balance_Due = Convert.ToDecimal(reader["AccountBalance"].ToString());
-                    b.Due_Dt = DateTime.ParseExact((reader["DueDate"].ToString()), "MM/DD/YYYY", null);
+                    b.Due_Dt = Convert.ToDateTime(reader["DueDate"]);
                     b.Class_BillInfo.Bill_Amount= Convert.ToDecimal(reader["BillAmount"].ToString());
                     b.Class_BillInfo.FormatGUID= reader["FormatGUID"].ToString();
-                    b.DateAdded = DateTime.ParseExact((reader["DateAdded"].ToString()), "MM/DD/YYYY", null);
+                    b.DateAdded = Convert.ToDateTime(reader["DateAdded"]);
 
                     returnData.Add(b);
                 }
                 
             }
-            catch (OleDbException e)
+            catch (Exception e)
             {
+                if(e is OleDbException)
+                {
+
                 return returnData;
+                }
             }
             finally
             {

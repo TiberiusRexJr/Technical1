@@ -179,7 +179,7 @@ namespace Technical1.FileOps
             foreach(BillHeader b in headerList)
             {
 
-               string line = b.Class_BillInfo.CustomerID.ToString() + "," + b.Customer_Name + "," + b.Account_No + "," + b.Class_AddressInformation.Mailing_Address_1 + "," + b.Class_AddressInformation.City + "," + b.Class_AddressInformation.State + "," + b.Class_AddressInformation.Zip + "," + b.Class_BillInfo.ID.ToString() + "," + b.Bill_Dt.ToString() + "," + b.Class_BillInfo.BillNumber + "," + b.Class_BillInfo.Balance_Due.ToString() + "," + b.Due_Dt.ToString() + "," + b.Class_BillInfo.Bill_Amount.ToString() + "," + b.Class_BillInfo.FormatGUID + "," + b.DateAdded.ToString();
+               string line = b.Class_BillInfo.CustomerID.ToString() + "," + b.Customer_Name + "," + b.Account_No + "," + b.Class_AddressInformation.Mailing_Address_1 + "," + b.Class_AddressInformation.City + "," + b.Class_AddressInformation.State + "," + b.Class_AddressInformation.Zip + "," + b.Class_BillInfo.ID.ToString() + "," + b.Bill_Dt.ToString("MM/dd/yyyy") + "," + b.Class_BillInfo.BillNumber + "," + b.Class_BillInfo.Balance_Due.ToString() + "," + b.Due_Dt.ToString("MM/dd/yyyy") + "," + b.Class_BillInfo.Bill_Amount.ToString() + "," + b.Class_BillInfo.FormatGUID + "," + b.DateAdded.ToString("MM/dd/yyyy");
 
                 lineData.Add(line);
             }

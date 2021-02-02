@@ -181,10 +181,8 @@ namespace Technical1.ConsoleUI
         public void CSV_From_DB()
         {
             string outputDirectory = string.Empty;
-         
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-            fbd.Description = "Choose a Output Location";
 
+            ui.ConsoleMessage(MessageType.CallToAction, "Choose a output folder");
             outputDirectory = GetOutputDir();
 
             List<BillHeader> dataList= _db.GetData();
