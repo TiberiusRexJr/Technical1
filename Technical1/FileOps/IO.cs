@@ -34,6 +34,14 @@ namespace Technical1.FileOps
         #endregion
 
         #region ReadFiles
+        /// <summary>
+        /// Accepts a filePath and a node name. Attemps to use a <type>FileStream</type> to open the file
+        /// to Aquire a <type>XMlNodeList</type> of the provided <paramref name="nodeName"/>
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="nodeName"></param>
+        /// <returns>XmlNodeList</returns>
+        /// <returns>Null</returns>
         public XmlNodeList GetXMLData(string filePath, string nodeName)
         {
             XmlDocument xml = new XmlDocument();
@@ -69,6 +77,15 @@ namespace Technical1.FileOps
 
         #region WriteFile
 
+        /// <summary>
+        /// Uses a <type>StreamWriter</type> instance to attempt to write the location provided by <paramref name="writeToDir"/>
+        /// the data provided by <paramref name="writeData"/> and <paramref name="header"/> which are the Bill Line data and single
+        /// Header of a RPT file.
+        /// </summary>
+        /// <param name="writeToDir"></param>
+        /// <param name="header"></param>
+        /// <param name="writeData"></param>
+        /// <returns>bool</returns>
         public bool WriteToRPT(string writeToDir,string header,List<InvoiceBill> writeData)
         {
             bool status = false;
@@ -150,6 +167,12 @@ namespace Technical1.FileOps
 
         #region Create Write Data CSV
 
+        /// <summary>
+        /// Creates the data to be written to a CSV File by passing the provided <paramref name="dataList"/> to helper functions
+        /// <c>CreateLineDataCSV</c> and <c>CreateInvoiceHeaderCSV</c> respectivley. It then returns a Tuple containing both pairs of data
+        /// </summary>
+        /// <param name="dataList"></param>
+        /// <returns>Tuple</returns>
         public (string Header,List<string>LineData) CreateWriteDataCSV(List<BillHeader> dataList)
         {
             string Header = string.Empty;
@@ -172,6 +195,12 @@ namespace Technical1.FileOps
             return (Header, LineData);
         }
 
+        /// <summary>
+        /// A Helper Function to <see cref=">CreateWriteDataCSV"/> Uses the data provided by <paramref name="headerList"/> to 
+        /// format a CSV Style line for every <type>BillHeader</type> Object in the List.
+        /// </summary>
+        /// <param name="headerList"></param>
+        /// <returns>List<string></returns>
         private List<string> CreateLineDataCSV(List<BillHeader> headerList)
         {
             List<string> lineData = new List<string>();
@@ -187,6 +216,14 @@ namespace Technical1.FileOps
             return lineData;
         }
 
+        /// <summary>
+        /// A Helper Function
+        /// Creates a a CSV formateed Header line for a CSV file.
+        /// uses <see cref=">GetHeaderStatistics"/> to preform Calculations and then uses the returned values to
+        /// create a CSV formated Header Line.
+        /// </summary>
+        /// <param name="billList"></param>
+        /// <returns>String</returns>
         private String CreateInvoiceHeaderCSV(List<BillHeader> billList)
         {
             string line = string.Empty;
@@ -200,6 +237,13 @@ namespace Technical1.FileOps
         #endregion
 
         #region Create Write Data RPT
+        /// <summary>
+        /// Uses a list of <type>BillHeader</type> Objects to create the data that will be writtne to a RPT style
+        /// document. Uses helper functions <see cref="CreateInvoiceRecordLine_Address"/> and <see cref="CreateInvoiceRecordLine_Invoice"/>
+        /// and <see cref="CreateInvoiceHeaderRPT"/> to create the entirity of the data to be written.
+        /// </summary>
+        /// <param name="billHeaders"></param>
+        /// <returns></returns>
         public (string Header, List<InvoiceBill>WriteData) CreateWriteDataRPT(List<BillHeader> billHeaders)
         {
             string Header = string.Empty;
@@ -218,6 +262,11 @@ namespace Technical1.FileOps
             return (Header, WriteData);
         }
 
+        /// <summary>
+        /// Creates a "HH~" formated line using the <param name="header"></param> data.
+        /// </summary>
+        /// <param name="header"></param>
+        /// <returns>String</returns>
         private string CreateInvoiceRecordLine_Address(BillHeader header)
         {
             
@@ -227,6 +276,11 @@ namespace Technical1.FileOps
 
             return line;
         }
+        /// <summary>
+        /// Creates a "AA~" formated line using the <paramref name="header"/> data.
+        /// </summary>
+        /// <param name="header"></param>
+        /// <returns>String</returns>
 
         private string CreateInvoiceRecordLine_Invoice(BillHeader header)
         {
@@ -247,6 +301,11 @@ namespace Technical1.FileOps
             return line;
         }
 
+        /// <summary>
+        /// Creates a header for a RPT formated document
+        /// </summary>
+        /// <param name="billList"></param>
+        /// <returns></returns>
         private string CreateInvoiceHeaderRPT(List<BillHeader> billList)
         {
             string line = string.Empty;
@@ -261,6 +320,11 @@ namespace Technical1.FileOps
         #endregion
 
         #region Statistics
+        /// <summary>
+        /// Calculates the data that will be used for both a CSV and RPT header.
+        /// </summary>
+        /// <param name="billList"></param>
+        /// <returns></returns>
           (int RecordCount,decimal RecordInvoiceTotal,string CurrentDate)  GetHeaderStatistics(List<BillHeader> billList)
         {
 

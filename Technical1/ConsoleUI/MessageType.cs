@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Technical1.ConsoleUI
 {
+    /// <summary>
+    /// A Puesdo Enumertion Class used by the MessnegerUI class to format messages
+    /// </summary>
     class MessageType
     {
         #region Constructor

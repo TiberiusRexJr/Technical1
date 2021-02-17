@@ -7,6 +7,9 @@ using Technical1.Model;
 
 namespace Technical1.FileOps
 {
+    /// <summary>
+    /// A utility function that can serve to insert "extera" data not derived from XML
+    /// </summary>
     class FileOpsUtil
     {
         public List<BillHeader> FillInExtraData(List<BillHeader> dataList)

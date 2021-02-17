@@ -5,10 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Technical1.ConsoleUI
-{
+{ /// <summary>
+  /// A Class created to be used as a Puesdo Enumeration for file types
+  /// <remarks>
+  /// Can be expanded upon and saves time and typos.
+  /// </remarks>
+  /// </summary>
+  
     class FilterFileExt
     {
         #region Constructor
+
+       
         private FilterFileExt(string value) { Value = value; }
         #endregion
         #region Variables

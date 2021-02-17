@@ -28,6 +28,12 @@ namespace Technical1.FileOps
         #endregion
 
         #region Parse
+
+        /// <summary>
+        /// Parses the provided .xml file and extracts the data into a list of <type>BillHeader</type> objects. One object per each Parent Node.
+        /// </summary>
+        /// <param name="nodeList"></param>
+        /// <returns></returns>
         public List<BillHeader> ParseXMLData(XmlNodeList nodeList)
         {
 
@@ -104,6 +110,11 @@ namespace Technical1.FileOps
             
         }
 
+        /// <summary>
+        /// Parses through a RPT formated Document and Extracts the data into a <type>List<BillHeader</type> List.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
         public List<BillHeader> ParseRPT(string filePath)
         {
             List<BillHeader> dataList = new List<BillHeader>();
@@ -163,6 +174,13 @@ namespace Technical1.FileOps
                 return dataList;
         }
 
+        /// <summary>
+        /// A Helper function for <see cref="ParseRPT(string)"/>
+        /// Further Seperates the embeded data and returns a single <type>BillHeader</type> Object that containes the extracted
+        /// data.
+        /// </summary>
+        /// <param name="rowData"></param>
+        /// <returns></returns>
         private BillHeader ParseRPTHelper(List<string> rowData)
         {
             BillHeader bill = new BillHeader();
