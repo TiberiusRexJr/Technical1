@@ -14,12 +14,15 @@ namespace Technical1.ConsoleUI
 
     class UI
     {
+        #region Variables
         private Parsing _parse = new Parsing();
         private Io _io = new Io();
         private FileOpsUtil _ut = new FileOpsUtil();
         private BillHeader _bh = new BillHeader();
         private MessageUI ui = new MessageUI();
         private Db _db = new Db();
+
+        #endregion
 
         #region Main Functionality
 

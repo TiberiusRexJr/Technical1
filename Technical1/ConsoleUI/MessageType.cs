@@ -11,6 +11,7 @@ namespace Technical1.ConsoleUI
         #region Constructor
         private MessageType(string value) { Value = value; }
         #endregion
+
         #region Variables
         public string Value { get; set; }
         #endregion
